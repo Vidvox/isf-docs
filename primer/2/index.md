@@ -58,7 +58,7 @@ Recalling our discussion from chapter 1, GLSL is also commonly known as the "Ope
 
 With fragment shaders each pixel for the output is preloaded with the same same `main() {}` function and its behavior can vary depending on its coordinate position and other input variables that are specific to the individual pixel.
 
-![Fragment Shaders render the same main() {} function for each pixel](/pixels.jpg "Rendering a 8x8 pixel grid")
+![Fragment Shaders render the same main() {} function for each pixel](pixels.jpg "Rendering a 8x8 pixel grid")
 
 Within a fragment shader meeting the ISF specification, GLSL code is placed in the bottom section of the document.  For the most part, standard shader code can be used, however there are a few small differences with a few functions to help with cross-platform compatibility.
 
