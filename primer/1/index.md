@@ -16,7 +16,7 @@ The core concept of writing generators and FX in ISF is that each idea is design
 
 Visual artists, motion graphics designers, VJs, game developers and anyone else interested in using code to work with images and pixel data while taking advantage of the power of the GPU will find that ISF can be a great tool to work with.  In many cases you may use it to extend the capabilities of a piece of software that you are already using.  In others, you may want to create a single interactive graphical composition that runs embedded as part of a webpage.
 
-Software developers looking to support ISF in their own applications can visit the specification page for links to opensource codebases and other useful information.
+Software developers looking to support ISF in their own applications can visit the [ISF Specification Page](https://github.com/mrRay/ISF_Spec/) for links to opensource codebases and other useful information.
 
 ### What does this guide cover?
 
