@@ -1,5 +1,9 @@
 # ISF Quick Start
 
+- Introduction
+- Using ISF Compositions
+- Creating ISF Compositions
+
 ## Introduction
 
 If you are already somewhat familiar with programming, this quick start guide is a quick way to learn the basics of creating GLSL shaders to meet the ISF specification.  Shaders written in ISF can be used as visual generators, effects and transitions in supported software.
@@ -17,12 +21,15 @@ In this document we will cover the basics of using and writing shaders in ISF.
 - ISF files can be created, viewed and shared online at the [isf.video](http://interactiveshaderformat.com) website.  Compositions from this site can be downloaded and used in your host software of choice.
 - ISF shaders can be made as full page standalone webpages, with or without controls.  An example implementation can be found in the [ISF Generator Example on Glitch](https://glitch.com/edit/#!/isf-example?path=README.md).
 
+Additional discussion and examples can be found in the [ISF Primer chapter on using ISF Compositions](http://vidvox.github.io/isf/primer/3).
+
 ## Creating ISF Compositions
 
 You can create ISF compositions using a variety of different tools:
-- There is a free [ISF online editor](http://interactiveshaderformat.com).
+- There is a free [ISF Editor online](http://interactiveshaderformat.com).
 - There is a free [ISF Editor for Mac](http://www.vidvox.net/rays_oddsnends/ISF%20Editor_2.9.3.zip).
 - You can use any standard text editor.  If you are using an app like TextEdit, make sure to use the "Make Plain Text" option from the "Format" menu.
+- Additional discussion about development tools can be found in the [ISF Primer chapter on creating ISF Compositions](http://vidvox.github.io/isf/primer/3).
 
 To create your first ISF composition, open the tool of your choice, create a new file and save it with the title "myshader.fs".
 
@@ -45,12 +52,14 @@ void main() {
 }
 ```
 
-This ISF composition is made up of two parts - a JSON blob at the top that describes the shader and below that is section of GLSL code.  Every ISF composition you create will have these two things.
+This ISF composition is made up of two parts - a JSON blob at the top that describes the shader and below that is section of GLSL code.  The contents will vary but every ISF composition you create will have these two things in a .fs file.
 
-- In the JSON section, the `DESCRIPTION`, `CREDIT`, and `CATEGORIES` attributes are meta-data that can be used to include useful information about the purpose of the shader, who created it and which category groups the host application should include in.  The `ISFVSN` attribute tells the host which version of the ISF specification this shader was written against.  Though each ISF composition must include a JSON section, many of the attributes are optional and several are only used in specific circumstances.
+- In the JSON section, the `DESCRIPTION`, `CREDIT`, and `CATEGORIES` attributes are meta-data that can be used to include useful information about the purpose of the shader, who created it and which category groups the host application should include in.  The `ISFVSN` attribute tells the host which version of the ISF specification this shader was written against.  Though each ISF composition must include a JSON section, many of the attributes are optional and several are only used in specific circumstances.  The [ISF JSON Reference](https://vidvox.github.io/isf/ref/json) contains a detailed listing of the available options for this section.
 - In the GLSL section is our `void main() {}` function in which the variable `gl_FragColor` is set to the color orange.  By convention, this function is called by host applications to render each shader and must be included.
 
 From this starting point, you can replace the contents of the `void main() {}` function with other code and set `gl_FragColor` to any other color.  With GLSL, the code in this function will execute simultaneously for every single pixel in your image.
+
+This is further detailed in the [ISF Primer chapter on the anatomy of an ISF composition](http://vidvox.github.io/isf/primer/2).
 
 ## Automatically Created Uniforms and Variables in ISF
 
@@ -103,6 +112,8 @@ void main() {
 ```
 
 This code uses the `TIME` uniform variable to animate the output.  When the x position of the current coordinate is less than the fraction part of the time in sections the image is filled in with our color, otherwise the pixel is transparent.
+
+Further discussion and examples can be found in the [ISF Primer chapter on automatically created uniform variables](http://vidvox.github.io/isf/primer/4).
 
 ## Adding Interface Controls
 
@@ -172,6 +183,8 @@ void main() {
 
 The [ISF JSON Reference](https://vidvox.github.io/isf/ref/json) contains a detailed listing of the various supported input types and attributes which includes conventions for passing in both scalar types like `float` and `bool`, vector types like `vec2` (for points) and `vec4` (for colors), and special types like image and audio data.
 
+Further discussion and examples can be found in the [ISF Primer chapter on the anatomy of an ISF composition](http://vidvox.github.io/isf/primer/2).
+
 ## Making Image Effect Filters
 
 Part of the ISF specification is a convention for declaring compositions as effects filters which are meant to process incoming image data.  This is accomplished by including an input with the `TYPE` set to "image" and setting the `NAME` to "inputImage".
@@ -198,9 +211,9 @@ Now copy and paste the following code into your editor and save the file:
 	]
 }*/
 
-vec3 invertColor (vec3 p)
+vec3 invertColor (vec3 c)
 {
-	return 1.0 - srcPixel;
+	return 1.0 - c;
 }
 
 void main()
@@ -214,6 +227,8 @@ void main()
 This very simple example demonstrates the two important details when creating image filters:
 - Including the "inputImage" as an element in the `INPUTS` section of the JSON blob.
 - Using the `IMG_NORM_PIXEL()` function to get the color of a particular normalized pixel.  Within ISF, this function and its non-normalized counterpart `IMG_PIXEL()` replace the functions `texture2D()` or `texture2DRect()`.  More information can be found on the [ISF built-in functions](https://vidvox.github.io/isf/ref/functions) reference page.
+
+ISF compositions can include more than one image input, making it possible to pass in additional data to be used for things like masking and distortion effects.  Additional information on declaring image inputs and the image filter convention can be found in the[ISF JSON Reference](https://vidvox.github.io/isf/ref/json).
 
 ## Including Vertex Shaders
 
@@ -276,6 +291,8 @@ Within the fragment shader, instead of using the traditional `isf_FragNormCoord`
 
 Also note that any `uniform` variables declared in the JSON section of the fragment shader are also automatically available to the vertex shader.
 
+Further discussion and examples can be found in the ISF Primer chapters on [using vertex shaders to create a rotation effect](http://vidvox.github.io/isf/primer/5) and [using vertex shaders in convolution filters](http://vidvox.github.io/isf/primer/6).
+
 ## Multiple Passes
 
 While GLSL is incredibly powerful, some advanced composition ideas require combining the results of multiple shader compositions at different resolutions in order to create a final output.  ISF adds a convention for creating shaders that have multiple render passes that can reference each other making it possible to make complex creations.
@@ -326,11 +343,13 @@ void main()
 ```
 
 The three important details here are:
-- The addition of the `PASSES` array to the JSON section of our composition.  Here there are defined two passes.  The first renders at 1/16th of the final output and has a special `TARGET` name set to "bufferVariableNameA" which allows other render passes to access it.  The second and final render pass has no included attributes and will have a `RENDERSIZE` equal to the final output, as determined by the host application (for an image filter typically this will be the same resolution as the "inputImage".
+- The addition of the `PASSES` array to the JSON section of our composition.  Here there are defined two passes.
+	- The first renders at 1/16th of the final output and has a special `TARGET` name set to "bufferVariableNameA" which allows other render passes to access it.  
+	- The second and final render pass has no included attributes and will have a `RENDERSIZE` equal to the final output, as determined by the host application (for an image filter typically this will be the same resolution as the "inputImage".
 - Within the GLSL code, the new automatic variable `PASSINDEX` is available for determining which render pass is currently being executed.  Like with other uniform variables you can use this in both the fragment and vertex shader stages.
 - Within the GLSL code, in addition to the "inputImage" variable, the "bufferVariableNameA" is used along with the `IMG_THIS_NORM_PIXEL` functions to access pixel data across render passes.
 
-The [ISF JSON Reference](https://vidvox.github.io/isf/ref/json) contains a detailed information on declaring multiple render passes.
+The [ISF JSON Reference](https://vidvox.github.io/isf/ref/json) contains a detailed information on declaring multiple render passes.  Further discussion and examples can be found in the [ISF Primer chapter on multiple render passes](http://vidvox.github.io/isf/primer/7).
 
 ## Persistent Buffers
 
@@ -377,6 +396,10 @@ void main()
 ```
 
 In this code, the result of each execution of the shader is stored in "bufferVariableNameA", which is then used in the next pass.  The "blurAmount" variable specifies how much to mix between the new pixel and the old one.  This technique is often used to create feedback style effects.
+
+Though not supported by all renderers, the optional `FLOAT` attribute can be included to create a 32-bit buffer.  This will use up more memory but will store information more accurately between render passes.
+
+Further discussion can be found in the [ISF Primer chapter on persistent buffers](http://vidvox.github.io/isf/primer/7) including examples of creating feedback effects and a Conway's Game of Life in GLSL.
 
 ## Audio Waveforms and Audio FFT Data
 
@@ -431,13 +454,13 @@ To pass audio data into shaders, the audio samples are converted into pixel info
 
 The "audioFFT" type works in a similar fashion, with the results packed into an image where the y-axis representing individual channels and the x-axis holding the results for individual frequency bins.
 
-Further discussion and examples can be found in the [ISF Primer chapter on working with audio and audio FFTs](http://vidvox.github.io/primer/7).
+Further discussion and examples can be found in the [ISF Primer chapter on working with audio and audio FFTs](http://vidvox.github.io/isf/primer/8).
 
 ## Converting Non-ISF GLSL Shaders to ISF
 
 In many cases, GLSL code can be easily adapted to ISF by adding the JSON blob and making a few minor changes to a few function and variable names.
 
-For example, if you are coming from an environment like Shader Toy or The Book of Shaders, the variable that they use for the time in seconds might be something like `u_time` or `iTime` and you would simply need to change those to `TIME` to work in ISF.
+For example, if you are coming from an environment like The Book of Shaders or Shader Toy, the variable that they use for the time in seconds might be something like `u_time` or `iTime` and you would simply need to change those to `TIME` to work in ISF.
 
 Here is a list of tips that address many of the common differences:
 - You should probably replace any calls in your shader to `texture2D()` or `texture2DRect()` with `IMG_NORM_PIXEL()` or `IMG_PIXEL()`, respectively. Images in ISF- inputs, persistent buffers, etc- can be accessed by either `IMG_NORM_PIXEL()` or `IMG_PIXEL()`, depending on whether you want to use normalized or non-normalized coordinates to access the colors of the image. If your shader isn't using these- if it's using `texture2D()` or `texture2DRect()`- it won't compile if the host application tries to send it a different type of texture.
@@ -449,6 +472,8 @@ Here is a list of tips that address many of the common differences:
 - While ISF files are fragment shaders, and the host environment automatically generates a vertex shader, you can use your own vertex shader if you'd like. If you go this route, your vertex shader should have the same base name as your ISF file (just use the extension .vs), and the first thing you do in your vertex shader's main function is call `isf_vertShaderInit();`.
 - If the shader you're converting requires imported graphic resources, note that the ISF format defines the ability to import image files by adding objects to your JSON dict under the `IMPORTED` key. The imported images are accessed via the usual `IMG_PIXEL()` or `IMG_NORM_PIXEL()` methods. Details on how to do this are listed in the full specification and ISF Reference Pages.
 - If your texture doesn't look right, make sure your texture coordinates are ranged properly (textures are typically "clamped" by the host implementation, if you specify an out-of-range texture coordinate it may look funny).
+
+Further discussion and examples can be found in the [ISF Primer chapter on adapting existing GLSL code to the ISF specification](http://vidvox.github.io/isf/primer/9).
 
 ## Next Steps
 
