@@ -24,6 +24,7 @@ Whether you are a GLSL expert or just getting started, there are several resourc
 
 ### Online resources
 
+- The [ISF Quick Start](quickstart/) is a guide to quickly get started with writing GLSL shaders in the ISF specification.  A good starting point for people who already know how to code and are just looking to understand the core concepts of ISF.
 - The [ISF Reference Pages](ref/) contain an overview of the available built-in variables, functions and other conventions used by ISF as a quick reference for shader developers.
 - The [ISF Primer](primer/) is a set of lessons to help guide you through writing your first shaders in ISF.
 - The [ISF Specification Page](https://github.com/mrRay/ISF_Spec/) contains detailed information about ISF for shader and application developers, along with links to source code repositories and other useful resources.
@@ -38,7 +39,6 @@ Though you can create or modify ISF compositions using any standard text editor 
 	- Browse, preview and download shaders from the online community.
 	- Use a web-cam, static images, or uploaded GIFs as sources for image filters.
 	- UI items are automatically created for inputs, allowing you to interact with your ISF file.
-	- Shaders uploaded to this site can be inserted on other pages on the web using standard embed tags.
 
 #### The ISF Editor For Mac
 

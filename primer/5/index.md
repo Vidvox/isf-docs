@@ -1,269 +1,204 @@
-# Convolution Filter
+# Vertex Shaders
 
-In image filtering one of the commonly used techniques from mathematics is are convolution matrices, also sometimes called a kernel.  Convolution is a process by which an element, in this case a pixel, is adjusted by performing some sort of function along with its neighboring pixels.  This is generally used for blurring, sharpening, embossing, edge detection, and other situations where multiple pixels are being blended together in some fashion.  This lesson on convolution will be relevant whether you are writing shaders to meet the ISF specification and for using GLSL other environments.
+When writing shaders that are designed for 2D images as the ISF specification is currently designed for, typically most of the code you'll write is in the fragment shader (.fs) of your ISF shader.  In all of the examples we've seen so far we haven't had to create a vertex shader at all - part of the ISF specification is to automatically generate one if there isn't one provided.
 
-For this chapter we'll look at:
-- What a convolution matrix is and how they are used to process images.
-- How to set up a generalized convolution ISF filter.
-- How to build specific use cases of convolution filters.
-- Discuss other similar use cases.
+In this chapter we'll look at how to add a custom vertex shader to work alongside a fragment shader with ISF and one of the simple cases where they can be useful.  The specific topics covered will be:
+- What are vertex shaders and how are they different from fragment shaders?
+- How to include a vertex shader as part of an ISF composition.
+- How to pass information from a vertex shader to a fragment shader using varying variables.
+- A brief introduction to polar vs Cartesian coordinate spaces.
+- Using a vertex shader to create a basic rotation effect.
 
-These concepts will also come into play in later chapters as we dive further into advanced topics of GLSL and ISF.
+## Vertex Shaders vs Fragment Shaders
 
-## What is a convolution matrix?
+Though ISF is designed to work with images, within OpenGL an image is a 2D plane, where this 2D plane itself has 4 coordinates (vertices) that make up its position in space and has pixels (fragments) on it.
 
-In mathematics, a convolution matrix, or kernel, is a set of weights that describe how a number of elements are to be added together.  For our purposes each kernel is a 3x3 grid of numbers, but in some cases you may encounter 5x5 or even larger kernels.
+The OpenGL Shading Language provides different types of shaders, vertex and fragment, for manipulating both the coordinate points and the pixels respectively.  If you are only looking to create or manipulate the pixels of an image, very often the fragment shader alone is enough because you want to draw using whatever 2D geometry is provided by the rendering pipeline that your generator or filter is running inside of.
 
-An example kernel may look like:
+However there are a few cases where it can be beneficial to include a custom vertex shader.  One such example that we will look at in this chapter is applying a rotation filter, which manipulates the coordinate points directly, moving the entire plane by adjusting the 4 vertex points instead of every single pixel.  Another use case that we will look at in the next chapter is using a vertex shader to precompute fragment coordinates for when performing convolutions.
+
+	Note: In GLSL there are even more kinds of shaders. Currently ISF is made for working with 2D images and only makes use of vertex and fragment shaders.  A draft version of the next version of the ISF specification introduces additional conventions for working with 3D shapes with vertex and geometry shaders.
+
+## Using Vertex Shaders in ISF
+
+When including a vertex shader as part of an ISF composition, start by creating a basic fragment shader that will include the JSON blob.  Then create another file with the same name but use a 'vs' file extension.  Whenever a host application tries to load the fragment shader, it will look to see if a custom matching .vs is included.  If not, the default vertex shader is used instead.
+
+The most basic vertex shader for ISF would look something like this:
 ```
-//	A blurring kernel
-[0.0625, 0.125, 0.0625,
-0.125, 0.25, 0.125,
-0.0625, 0.125, 0.0625]
-```
+//	passthru.vs
+//	put your code in the main() {} function
 
-Each of the numbers in this grid is called a `weight`.
-
-Here you can imagine the middle pixel as the one being evaluated.  In our GLSL code we so far have retrieved this by using the `IMG_THIS_PIXEL()` function on an image.  To obtain the output result, we obtain the values of all of the neighboring pixels and combine them using the weights as multipliers.  When this operation is performed for every pixel in your image, you can get wildly different results by changing these weight values.
-
-	Note: For further reading on kernels visit the [Wikipedia page on convolution for image processing](https://en.wikipedia.org/wiki/Kernel_(image_processing)).
-
-### Example Kernels
-
-Many different effects can be created by using different weight values as inputs.  To get a sense for how some of the most important image filters works let's look at some sample kernels.
-
-#### The Identity Kernel 
-
-```
-//	The Identity Kernel
-[0.0, 0.0, 0.0,
-0.0, 1.0, 0.0,
-0.0, 0.0, 0.0]
-```
-
-In this case each neighboring pixel is multiplied by 0.0 and the middle pixel is multiplied by 1.0, so the output is simply equal to the middle pixel.  When using this special kernel, known as the `Identity`, the output will always look the same as the input.
-
-#### The Box Blur Kernel 
-
-Another commonly found kernel is the one for a `Box Blur`.  Many blur filters are based on this idea of averaging the middle pixel with the values around it.  The stronger the weights of the neighboring pixels in comparison to the middle, the stronger the blur.  In such cases it is important for the sum of all of the weights to be 1.0.
-
-```
-//	The Box Blur Kernel
-[0.11111, 0.11111, 0.11111,
-0.11111, 0.11111, 0.11111,
-0.11111, 0.11111, 0.11111]
-```
-
-Though box blurs and other similar blurs are easily created with convolutions, a single pass of a 3x3 kernel does not produce a particularly deep blurring effect.  In the next chapter covering multi-pass shaders we'll look at how performing these kernels more than once can greatly increase the depth of the blur.
-
-#### Sharpen Kernel
-
-Often considered the opposite of the blur is the sharpen, which subtracts values on the diagonals instead of averaging.  This can often make edges appear more pronounced.
-
-```
-//	The Sharpen Kernel
-[-1.0, 0.0, -1.0,
-0.0, 5.0, 0.0,
--1.0, 0.0, -1.0]
-```
-
-Like with blurs, increasing the weight of the middle pixel compared to the amount subtracted will result in a stronger sharpening effect.  Similarly the sum of the weights must always be 1.0 for sharpen filters.
-
-#### Edge Detection Kernels
-
-In a similar fashion to sharpen kernels for edge detection the trick is to subtract.  However in this case, instead of the the sum of all of the weights being 1.0, they'll come out to 0.0;  this way it requires that certain pixels be much brighter for others to stay in the image, while most of them are set to black.
-
-```
-//	Edge Detection 1
-[1.0, 0.0, 1.0,
-0.0, -4.0, 0.0,
-1.0, 0.0, 1.0]
-```
-
-```
-//	Edge Detection 2
-[-1.0, -1.0, -1.0,
--1.0, 8.0, -1.0,
--1.0, -1.0, 1.0]
-```
-
-Just as there are many ways to write sharpen and blur filters with varying amount of strength based on the relative weights, the same is true of edge detection kernels.
-
-## Writing a Generalized Convolution Filter in ISF
-
-When creating GLSL shaders that evaluate convolution kernels it can be useful to make use of the vertex shader stage when possible.  Like with rotations this allows us to prepare coordinate values that are used for lookup during the fragment shader stage, saving valuable GPU time during rendering.
-
-### Create the Vertex Shader
-
-First we'll make the vertex shader for the convolution kernel.  Whether you are creating a generalized use case like in this example, or creating a shader based on a specific kernel, your vertex shader will likely look something like this:
-
-```
-varying vec2 left_coord;
-varying vec2 right_coord;
-varying vec2 above_coord;
-varying vec2 below_coord;
-
-varying vec2 lefta_coord;
-varying vec2 righta_coord;
-varying vec2 leftb_coord;
-varying vec2 rightb_coord;
+varying vec2 translated_coord;
 
 void main()
 {
+	//	make sure to call this in your custom ISF shaders to perform initial setup!
 	isf_vertShaderInit();
-	vec2 texc = vec2(isf_FragNormCoord[0],isf_FragNormCoord[1]);
-	vec2 d = 1.0/RENDERSIZE;
-
-	left_coord = clamp(vec2(texc.xy + vec2(-d.x , 0)),0.0,1.0);
-	right_coord = clamp(vec2(texc.xy + vec2(d.x , 0)),0.0,1.0);
-	above_coord = clamp(vec2(texc.xy + vec2(0,d.y)),0.0,1.0);
-	below_coord = clamp(vec2(texc.xy + vec2(0,-d.y)),0.0,1.0);
-
-	lefta_coord = clamp(vec2(texc.xy + vec2(-d.x , d.x)),0.0,1.0);
-	righta_coord = clamp(vec2(texc.xy + vec2(d.x , d.x)),0.0,1.0);
-	leftb_coord = clamp(vec2(texc.xy + vec2(-d.x , -d.x)),0.0,1.0);
-	rightb_coord = clamp(vec2(texc.xy + vec2(d.x , -d.x)),0.0,1.0);
+	translated_coord = isf_FragNormCoord;
 }
 ```
 
-Here we've declared eight different varying vec2 variables, one for each of the neighboring pixels.  Combined with the middle coordinate itself located at `isf_FragNormCoord` this completes the calculations needed to do the image pixel lookups in the fragment shader stage.
-
-### Create the Fragment Shader
-
-Now we can create the fragment shader that performs the actual convolution.  For this generalized shader we declare 9 float values, one for each weight and give each a range of -8.0 to 8.0.  Only the middle pixel is set to 1.0 by default, so when first loaded the filter will function as a pass-thru.
+And it match up with a corresponding boring passthru.fs that looks like this:
 
 ```
+//	passthru.fs
 /*{
+	"DESCRIPTION": "Passes through each pixel",
 	"CREDIT": "by VIDVOX",
 	"ISFVSN": "2",
 	"CATEGORIES": [
-		"Blur"
+		"TEST-GLSL FX"
 	],
 	"INPUTS": [
 		{
 			"NAME": "inputImage",
 			"TYPE": "image"
-		},
-		{
-			"NAME": "w00",
-			"TYPE": "float",
-			"MIN": -8.0,
-			"MAX": 8.0,
-			"DEFAULT": 0.0
-		},
-		{
-			"NAME": "w10",
-			"TYPE": "float",
-			"MIN": -8.0,
-			"MAX": 8.0,
-			"DEFAULT": 0.0
-		},
-		{
-			"NAME": "w20",
-			"TYPE": "float",
-			"MIN": -8.0,
-			"MAX": 8.0,
-			"DEFAULT": 0.0
-		},
-		{
-			"NAME": "w01",
-			"TYPE": "float",
-			"MIN": -8.0,
-			"MAX": 8.0,
-			"DEFAULT": 0.0
-		},
-		{
-			"NAME": "w11",
-			"TYPE": "float",
-			"MIN": -8.0,
-			"MAX": 8.0,
-			"DEFAULT": 1.0
-		},
-		{
-			"NAME": "w21",
-			"TYPE": "float",
-			"MIN": -8.0,
-			"MAX": 8.0,
-			"DEFAULT": 0.0
-		},
-		{
-			"NAME": "w02",
-			"TYPE": "float",
-			"MIN": -8.0,
-			"MAX": 8.0,
-			"DEFAULT": 0.0
-		},
-		{
-			"NAME": "w12",
-			"TYPE": "float",
-			"MIN": -8.0,
-			"MAX": 8.0,
-			"DEFAULT": 0.0
-		},
-		{
-			"NAME": "w22",
-			"TYPE": "float",
-			"MIN": -8.0,
-			"MAX": 8.0,
-			"DEFAULT": 0.0
 		}
 	]
 }*/
 
+varying vec2 translated_coord;
 
-varying vec2 left_coord;
-varying vec2 right_coord;
-varying vec2 above_coord;
-varying vec2 below_coord;
-
-varying vec2 lefta_coord;
-varying vec2 righta_coord;
-varying vec2 leftb_coord;
-varying vec2 rightb_coord;
-
-
-void main()
-{
-	vec4 colorLA = IMG_NORM_PIXEL(inputImage, lefta_coord);
-	vec4 colorA = IMG_NORM_PIXEL(inputImage, above_coord);
-	vec4 colorRA = IMG_NORM_PIXEL(inputImage, righta_coord);
-
-	vec4 colorL = IMG_NORM_PIXEL(inputImage, left_coord);
-	vec4 color = IMG_THIS_NORM_PIXEL(inputImage);
-	vec4 colorR = IMG_NORM_PIXEL(inputImage, right_coord);
-	
-	vec4 colorLB = IMG_NORM_PIXEL(inputImage, leftb_coord);
-	vec4 colorB = IMG_NORM_PIXEL(inputImage, below_coord);
-	vec4 colorRB = IMG_NORM_PIXEL(inputImage, rightb_coord);
-
-	//	make the average for the RGB values
-	vec3 convolution = (w11 * color + w01 * colorL + w21 * colorR + w10 * colorA + w12 * colorB + w00 * colorLA + w20 * colorRA + w02 * colorLB + w22 * colorRB).rgb;
-	
-	//	keep the alpha the same as the original pixel
-	gl_FragColor = vec4(convolution,color.a);
+void main() {
+	//	uses the translated_coord provided from the .vs
+	gl_FragColor = IMG_NORM_PIXEL(inputImage,translated_coord);
 }
 ```
 
-In the code section below the JSON, we can see that the `varying` vec2 variables from the vertex shader have also been declared here.  This makes it possible for those values to be read here in the fragment shader.
+This vertex shader isn't particularly exciting and is essentially what the default .vs looks like if you do not include a custom one.  Like the fragment shader, it just passes through whatever vertex information is passed into it.  The one important detail here is the `isf_vertShaderInit();` which must be called to do the initial setup for the vertex shader.
 
-Within the main() {} function the initial chunk of code gathers each neighboring pixel.  Next the convolution result vec3 RGB color is created by multiplying each pixel by its weight and adding them all together.  One small detail is that we use the alpha channel from the original pixel.
+The other noteworthy addition to this code is:
 
-## Creating Specific Kernels As Filters
+```
+varying vec2 translated_coord;
+```
 
-As you might imagine, getting a specific look by manipulating 9 different sliders can be a bit much.  This is why often it can be useful to pick a particular kernel and create a specific filter that includes a one or two high level parameters which modify the weights to adjust the strength.
+Which is found in both the .vs and .fs files.  This is a special variable type know as `varying`.
 
-Note that for these examples we will use a vertex shader identical to the one used above for the general convolution case.  Be sure to duplicate that code in its own file with a name that matches your fragment shaders below and uses the `.vs` extension.
 
-### Creating a Varying Box Blur Filter in ISF
+### Varying and Uniform Variables in Vertex Shaders
 
-A very simple blur filter that has a single strength value can be written as such.
+When including a custom vertex shaders, there are a few special kinds of variables that can be used to communicate between the different shaders.
+
+We've already learned how `uniform` variables are used to pass information from the host application into our shaders and in ISF these variables are defined as part of the JSON blob.  Any uniforms declared in the JSON blob are also automatically available to the fragment shader.
+
+The `varying` variable type makes it possible to use the vertex shader to precompute values that are passed into the fragment shader, interpolating along the primitive in the process.  These 
+
+	Note: Though the `varying` variable type is currently supported, future versions of GLSL have deprecated this idea.  As such it may get phased out in future versions of ISF.  However, most ISF hosts aim to be backwards compatible and this is exactly why the "ISFVSN" tag is included as an attribute in the JSON blob.
+
+## Creating a Rotation Filter
+
+One of the practical use cases for working with vertex shaders in 2D space is creating a rotation filter.
+
+In this section we'll write our rotation filter in two different ways, both essentially based on the same mathematical operations.  The first method will be written entirely in a fragment shader and the second will make use of the custom vertex shader.
+
+This is also a great opportunity to talk a bit about with angles, trigonometry and polar coordinate spaces, which are extremely useful when writing shaders.
+
+### Angles, Trigonometry and Polar Coordinate Spaces
+
+So far when writing our shaders we've dealt exclusively with 2D points in the form of (x, y).  In some cases those values were normalized (ranged 0.0 to 1.0) and at other times they were ranged, going between 0.0 and and maximum value like the RENDERSIZE.
+
+Another useful way to represent this information is in polar coordinates, where instead of (x, y) values, each point is represented by a distance and an angle (r, θ).  Once a coordinate is in the (r, θ) form, you can make adjustments to its position by adjusting the distance or angle, which is ideal for performing rotations, bump distortions and other visual effects that happen radially or in a circular fashion.
+
+Converting to and from polar coordinates and traditional Cartesian coordinate spaces is easy, as you will see in the rotation filter code below.
+
+GLSL provides many built-in functions for working with angles and trigonometry, a list of which can be found in the [ISF and GLSL Variables and Uniforms Reference Page](https://vidvox.github.io/isf/ref/variables) for quick lookup.
+
+### Rotation in a Fragment Shader
+
+If we were limited to working with a fragment shader, as some environments are, the following code is sufficient for rotating an image.
+
+Here a rotation is performed by converting each point to polar coordinates, adding to the angle and then converting back to Cartesian for the look up from the original image.
+
+This same math for going between coordinate spaces can be re-used in other situations.  Though not exactly the same, you may recall seeing similar looking code in Chapter 3 when we looked at the Twirl.fs filter.
+
+```
+/*
+{
+  "CATEGORIES" : [
+    "Geometry Adjustment"
+  ],
+  "ISFVSN" : "2",
+  "INPUTS" : [
+    {
+      "NAME" : "inputImage",
+      "TYPE" : "image"
+    },
+    {
+      "NAME" : "angle",
+      "TYPE" : "float",
+      "MAX" : 1,
+      "DEFAULT" : 0,
+      "MIN" : 0
+    }
+  ],
+  "CREDIT" : "by VIDVOX"
+}
+*/
+
+const float pi = 3.14159265359;
+
+void main()	{
+	//	'loc' is the location in pixels of this vertex.  we're going to convert this to polar coordinates (radius/angle)
+	vec2		loc = IMG_SIZE(inputImage) * vec2(isf_FragNormCoord[0],isf_FragNormCoord[1]);
+	//	'r' is the radius- the distance in pixels from 'loc' to the center of the rendering space
+	float		r = distance(IMG_SIZE(inputImage)/2.0, loc);
+	//	'a' is the angle of the line segment from the center to loc is rotated
+	float		a = atan ((loc.y-IMG_SIZE(inputImage).y/2.0),(loc.x-IMG_SIZE(inputImage).x/2.0));
+	
+	//	now modify 'a', and convert the modified polar coords (radius/angle) back to cartesian coords (x/y pixels)
+	loc.x = r * cos(a + 2.0 * pi * angle);
+	loc.y = r * sin(a + 2.0 * pi * angle);
+	
+	loc = loc / IMG_SIZE(inputImage) + vec2(0.5);
+	if ((loc.x < 0.0)||(loc.y < 0.0)||(loc.x > 1.0)||(loc.y > 1.0))	{
+		gl_FragColor = vec4(0.0);
+	}
+	else	{
+		gl_FragColor = IMG_NORM_PIXEL(inputImage,loc);
+	}
+}
+```
+
+
+### Rotation in a Vertex Shader
+
+Now let's do the same thing, but instead of doing the translation in the fragment shader we'll use the vertex shader
+
+Here is the code for Rotate.vs / Rotate.fs
+
+```
+//	Rotate.vs
+varying vec2 translated_coord;
+
+const float pi = 3.14159265359;
+
+void main()	{
+	isf_vertShaderInit();
+	
+	//	'loc' is the location in pixels of this vertex.  we're going to convert this to polar coordinates (radius/angle)
+	vec2		loc = IMG_SIZE(inputImage) * vec2(isf_FragNormCoord[0],isf_FragNormCoord[1]);
+	//	'r' is the radius- the distance in pixels from 'loc' to the center of the rendering space
+	float		r = distance(IMG_SIZE(inputImage)/2.0, loc);
+	//	'a' is the angle of the line segment from the center to loc is rotated
+	float		a = atan ((loc.y-IMG_SIZE(inputImage).y/2.0),(loc.x-IMG_SIZE(inputImage).x/2.0));
+	
+	//	now modify 'a', and convert the modified polar coords (radius/angle) back to cartesian coords (x/y pixels)
+	loc.x = r * cos(a + 2.0 * pi * angle);
+	loc.y = r * sin(a + 2.0 * pi * angle);
+	
+	translated_coord = loc / IMG_SIZE(inputImage) + vec2(0.5);
+}
+```
+
+And the matching Rotate.fs:
 
 ```
 /*{
 	"CREDIT": "by VIDVOX",
 	"ISFVSN": "2",
 	"CATEGORIES": [
-		"Blur"
+		"Geometry Adjustment"
 	],
 	"INPUTS": [
 		{
@@ -271,7 +206,7 @@ A very simple blur filter that has a single strength value can be written as suc
 			"TYPE": "image"
 		},
 		{
-			"NAME": "blurLevel",
+			"NAME": "angle",
 			"TYPE": "float",
 			"MIN": 0.0,
 			"MAX": 1.0,
@@ -280,117 +215,26 @@ A very simple blur filter that has a single strength value can be written as suc
 	]
 }*/
 
-varying vec2 left_coord;
-varying vec2 right_coord;
-varying vec2 above_coord;
-varying vec2 below_coord;
+//	Rotate.fs
 
-varying vec2 lefta_coord;
-varying vec2 righta_coord;
-varying vec2 leftb_coord;
-varying vec2 rightb_coord;
+varying vec2 translated_coord;
 
-void main()
-{
-
-	float mWeight = 1.0 - blurLevel;
-	float nWeight = blurLevel / 8.0;
-	
-	vec4 color = IMG_THIS_NORM_PIXEL(inputImage);
-	
-	//	note that we can skip the pixel lookups here if nWeight is 0.0
-	vec4 colorL = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, left_coord) : vec4(0.0);
-	vec4 colorR = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, right_coord) : vec4(0.0);
-	vec4 colorA = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, above_coord) : vec4(0.0);
-	vec4 colorB = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, below_coord) : vec4(0.0);
-
-	vec4 colorLA = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, lefta_coord) : vec4(0.0);
-	vec4 colorRA = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, righta_coord) : vec4(0.0);
-	vec4 colorLB = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, leftb_coord) : vec4(0.0);
-	vec4 colorRB = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, rightb_coord) : vec4(0.0);
-
-	vec3 blur = ((mWeight * color) + nWeight * (colorL + colorR + colorA + colorB + colorLA + colorRA + colorLB + colorRB)).rgb;
-	
-	gl_FragColor = vec4(blur,color.a);
-}
-```
-
-Unlike our previous box blur kernel which had fixed values, this determines its weights based on the `blurLevel` uniform variable declared in the JSON section.  As that value moves from 0.0 to 1.0, the weight of the neighbors increases while the weight of the middle pixel decreases.  Recall that for a blur or sharpen we need the sum of our weights to be 1.0.
-
-As a challenge, try adapting one of the other kernels we looked at, such as the sharpen kernel, and adapt this code to apply it instead of the box blur.
-
-### Creating Convolution Filters With For Loops
-
-In the examples so far we've used a vertex shader to pre-compute our coordinate points used in our fragment shaders.  While this is recommended when possible, there are times when your algorithm may use an indeterminate number of lookup points, or the lookup points may vary depending on other factors within your fragment shader code.
-
-```
-/*
-{
-  "CATEGORIES" : [
-    "Blur"
-  ],
-  "DESCRIPTION" : "",
-  "ISFVSN" : "2",
-  "INPUTS" : [
-    {
-      "NAME" : "inputImage",
-      "TYPE" : "image"
-    },
-    {
-      "NAME" : "blurLevel",
-      "TYPE" : "float",
-      "MAX" : 1,
-      "DEFAULT" : 0.5,
-      "MIN" : 0
-    }
-  ],
-  "CREDIT" : "by VIDVOX"
-}
-*/
-
-void main()	{
-	float mWeight = 1.0 - blurLevel;
-	float nWeight = blurLevel / 8.0;
-	vec4 result = vec4(0.0);
-	if (blurLevel > 0.0)	{
-		for (int i = -1;i <= 1;++i)	{
-			for (int j = -1;j <= 1;++j)	{
-				vec2 loc = gl_FragCoord.xy + vec2(i,j);
-				vec4 color = IMG_PIXEL(inputImage,loc);
-				if ((i == 0)&&(j == 0))	{
-					result.rgb += mWeight * color.rgb;
-					result.a = color.a;
-				}
-				else	{
-					result.rgb += nWeight * color.rgb;
-				}
-			}
-		}
+void main() {
+	vec2 loc = translated_coord;
+	//	if out of range draw black
+	if ((loc.x < 0.0)||(loc.y < 0.0)||(loc.x > 1.0)||(loc.y > 1.0))	{
+		gl_FragColor = vec4(0.0);
 	}
 	else	{
-		result = IMG_THIS_NORM_PIXEL(inputImage);	
+		gl_FragColor = IMG_NORM_PIXEL(inputImage,loc);
 	}
-	
-	gl_FragColor = result;
 }
 ```
 
-Here instead of using the vertex shader to pre-compute the lookup points and pass them over with varying variables, the lookup points are computed each time inside of the for loop.  With this method it would be easy to adapt this blur to doing a 5x5 neighbor pixel averaging without having to declare any new variables.
+As you may note, the code here looks very much the same as in the previous example.  However because we've moved a lot of the computation over to the vertex shader, this version will run more efficiently.
 
-As a note, it is recommended to avoid doing too many pixel lookups and comparisons within your code.  While there is no technical limit on this these operations are comparatively costly.  In some cases you can write in optimizations, such as for situations where you know a weight value for a pixel is 0.0, you can skip its corresponding lookup.
+The fragment shader here still does the small amount of work to make sure that the `translated_coord` is within the readable range for the original image and if not returns transparent black instead.
 
-### More Examples Of Convolution Shaders
+## Other Vertex Shader Use Cases
 
-A number of the sample shaders on the [ISF Sharing Website](http://interactiveshaderformat.com) are great examples of convolution filters.  As hinted at, many of the convolution shaders that are used in actual practice use another advanced technique that we will soon learn about for creating ISF compositions with multiple render passes.
-
-## Other Similar Use Cases
-
-Though not technically considered convolution filters because they don't just simply apply a kernel to a set of pixels, there are many visual effects that can be created by comparing a pixel to its neighbors.  Once you have the data in vec4 variables you can apply whatever functions or operations you can think of to combine the values into a single result.
-
-Here are a few filters in particular that use a similar technique:
-- An `Erode` effect searches surrounding pixels looking for minimum values.
-- A `Dilate` effect searches surrounding pixels looking for maximum values.
-- A `Frosted Glass` style effect can blend together several local pixels in a non-standard pattern.
-- An `Emboss` effect uses a combination of a convolution kernel and other post processing to create its output.
-
-Examples of these shaders and other related examples can be found on [ISF Sharing Website](http://interactiveshaderformat.com).
+Over the next few chapters we will see a handful of other examples where vertex shaders come into play, particularly with the concept of Convolution which we will investigate in the next chapter.

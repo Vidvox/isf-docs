@@ -54,11 +54,13 @@ Some of these attributes, such as DESCRIPTION, CREDIT and CATEGORIES, are meta-d
 
 ### GLSL
 
-Recalling our discussion from chapter 1, GLSL is also commonly known as the "OpenGL Shading Language" and it has what programmers like to call a C-like syntax because it resembles the C programming language.  Shaders run on the GPU and they are fast because the algorithms you code are written in such a way that the execute on every single pixel of an image at the same time.
+Recalling our discussion from chapter 1, GLSL is also commonly known as the "OpenGL Shading Language" and it has what programmers like to call a C-like syntax because it resembles the C programming language.
 
 With fragment shaders each pixel for the output is preloaded with the same same `main() {}` function and its behavior can vary depending on its coordinate position and other input variables that are specific to the individual pixel.
 
 ![Fragment Shaders render the same main() {} function for each pixel](pixels.jpg "Rendering a 8x8 pixel grid")
+
+This is often a different way of thinking about graphical programming or visual design than many people are accustomed to, but makes sense when you consider the parallel processing power of the GPU.  Rather than write a complex program that needs to step through each coordinate, these smaller micro-programs can be executed on each individual pixel at the same time.
 
 Within a fragment shader meeting the ISF specification, GLSL code is placed in the bottom section of the document.  For the most part, standard shader code can be used, however there are a few small differences with a few functions to help with cross-platform compatibility.
 

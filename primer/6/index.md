@@ -1,176 +1,103 @@
-# Multi-Pass Shaders and Persistant Buffers in ISF
+# Convolution Filter
 
-Two extremely powerful concepts that ISF adds on to GLSL are the ability to retain image information between render passes (persistant buffers) and creating compound shaders that have multiple rendering stages (multi-pass shaders) at potentially varying sizes.
+In image filtering one of the commonly used techniques from mathematics is are convolution matrices, also sometimes called a kernel.  Convolution is a process by which an element, in this case a pixel, is adjusted by performing some sort of function along with its neighboring pixels.  This is generally used for blurring, sharpening, embossing, edge detection, and other situations where multiple pixels are being blended together in some fashion.  This lesson on convolution will be relevant whether you are writing shaders to meet the ISF specification and for using GLSL other environments.
 
-In this chapter we'll look at:
-- How to set up a persistent buffer.
-- Discuss creating feedback style effects with persistent buffers.
-- How to set up multiple render passes.
-- Discuss creating a deep blur using multiple render passes.
-- How to make a Conway's Game of Life generator using a persistent buffer.
+For this chapter we'll look at:
+- What a convolution matrix is and how they are used to process images.
+- How to set up a generalized convolution ISF filter.
+- How to build specific use cases of convolution filters.
+- Discuss other similar use cases.
 
-## Persistant Buffers
+These concepts will also come into play in later chapters as we dive further into advanced topics of GLSL and ISF.
 
-ISF files can define persistent buffers.  These buffers are images (GL textures) that stay with the ISF file for as long as it exists. This is useful if you want to "build up" an image over time- you can repeatedly query and update the contents of persistent buffers by rendering into them- or if you want to perform calculations across the entire image, storing the results somewhere for later evaluation. Further details on exactly how to do this are in the full [ISF Specification Page](https://github.com/mrRay/ISF_Spec/).
+## What is a convolution matrix?
 
+In mathematics, a convolution matrix, or kernel, is a set of weights that describe how a number of elements are to be added together.  For our purposes each kernel is a 3x3 grid of numbers, but in some cases you may encounter 5x5 or even larger kernels.
+
+An example kernel may look like:
 ```
-/*{
-	"DESCRIPTION": "demonstrates the use of a persistent buffer to create a motion-blur type effect. also demonstrates the simplest use of steps: a one-step rendering pass",
-	"CREDIT": "by zoidberg",
-	"ISFVSN": "2.0",
-	"CATEGORIES": [
-		"TEST-GLSL FX"
-	],
-	"INPUTS": [
-		{
-			"NAME": "inputImage",
-			"TYPE": "image"
-		},
-		{
-			"NAME": "blurAmount",
-			"TYPE": "float"
-		}
-	],
-	"PASSES": [
-		{
-			"TARGET": "bufferVariableNameA",
-			"PERSISTENT": true,
-			"FLOAT": true
-		}
-	]
-	
-}*/
-
-void main()
-{
-	vec4		freshPixel = IMG_THIS_PIXEL(inputImage);
-	vec4		stalePixel = IMG_THIS_PIXEL(bufferVariableNameA);
-	gl_FragColor = mix(freshPixel,stalePixel,blurAmount);
-}
+//	A blurring kernel
+[0.0625, 0.125, 0.0625,
+0.125, 0.25, 0.125,
+0.0625, 0.125, 0.0625]
 ```
 
-In this simple example we have added a new section to our JSON blob called `PASSES` which is used to describe each render pass of the shader.  Here you can set the options for each pass.
-- The `TARGET` attribute is used to set the name by which this render pass will be referred to in the code section.  This will be available as an `IMAGE` type.
-- For each buffer that you wish to retain between passes, the `PERSISTENT` can be set to `true`.
-- If you wish to have the value stored as a 32-bit floating point value the additional `FLOAT` attribute can be included and set to `true`.  Using 32-bit textures will use up more memory, but in some cases can be extremely useful.
+Each of the numbers in this grid is called a `weight`.
 
-For this ISF we have a single render pass, that is persistant and stores floating point values.
+Here you can imagine the middle pixel as the one being evaluated.  In our GLSL code we so far have retrieved this by using the `IMG_THIS_PIXEL()` function on an image.  To obtain the output result, we obtain the values of all of the neighboring pixels and combine them using the weights as multipliers.  When this operation is performed for every pixel in your image, you can get wildly different results by changing these weight values.
 
-In the code section we refer to the image `bufferVariableNameA`, which holds the output from the previous frame.
+	Note: For further reading on kernels visit the [Wikipedia page on convolution for image processing](https://en.wikipedia.org/wiki/Kernel_(image_processing)).
 
-When the `PASSES` section is left out, as in our previous examples, it is presumed that the shader includes a single render pass and that the output is not stored in memory to be used later on.
+### Example Kernels
 
-### Video Feedback
+Many different effects can be created by using different weight values as inputs.  To get a sense for how some of the most important image filters works let's look at some sample kernels.
 
-One of the most common usages of persistant buffers is creating video feedback loops.  This is a process that goes back to the days of analog video and the same idea can be done digitally.  The above shader is an example of of this technique: By blending the previous pixel with the current frame, the visual effect of a feedback style motion blur is created.  Adding in additional functionality to this shader such as zooming, rotating, inverting, applying convolution kernels to blur / sharpen can create all kinds of interesting results.
-
-Here is an example of how to modify the example to include an invert stage:
+#### The Identity Kernel 
 
 ```
-/*{
-	"DESCRIPTION": "creates a simple inverting feedback effect",
-	"CREDIT": "by VIDVOX",
-	"ISFVSN": "2.0",
-	"CATEGORIES": [
-		"TEST-GLSL FX"
-	],
-	"INPUTS": [
-		{
-			"NAME": "inputImage",
-			"TYPE": "image"
-		},
-		{
-			"NAME": "blurAmount",
-			"TYPE": "float"
-		}
-	],
-	"PASSES": [
-		{
-			"TARGET": "bufferVariableNameA",
-			"PERSISTENT": true,
-			"FLOAT": true
-		}
-	]
-	
-}*/
-
-void main()
-{
-	vec4		freshPixel = IMG_THIS_PIXEL(inputImage);
-	vec4		stalePixel = IMG_THIS_PIXEL(bufferVariableNameA);
-	stalePixel.rgb = 1.0 - stalePixel.rgb;
-	gl_FragColor = mix(freshPixel,stalePixel,blurAmount);
-}
+//	The Identity Kernel
+[0.0, 0.0, 0.0,
+0.0, 1.0, 0.0,
+0.0, 0.0, 0.0]
 ```
 
-Here we have simply added the line that on each pass inverts the rgb of the `stalePixel`.  As a challenge, try adding the rotate or blurring sample code from previous chapters and apply them to the `stalePixel` before the `mix` function is called.
+In this case each neighboring pixel is multiplied by 0.0 and the middle pixel is multiplied by 1.0, so the output is simply equal to the middle pixel.  When using this special kernel, known as the `Identity`, the output will always look the same as the input.
 
-## Multi-Pass Shaders
+#### The Box Blur Kernel 
 
-The ISF file format defines the ability to execute a shader multiple times in the process of rendering a frame for output- each time the shader's executed (each pass), the uniform int variable `PASSINDEX` is incremented. Details on how to accomplish this are described below in the spec, but the basic process involves adding an array of dicts to the `PASSES` key in your top-level JSON dict. Each dict in the `PASSES` array describes a different rendering pass- the ISF host will automatically create buffers to render into, and those buffers (and therefore the results of those rendering passes) can be accessed like any other buffer/input image/imported image (you can render to a texture in one pass, and then read that texture back in and render something else in another pass).  The dicts in `PASSES` recognize a number of different keys to specify different properties of the rendering passes- more details are in the spec below.
-
-```
-/*{
-	"DESCRIPTION": "demonstrates the use of two-pass rendering- the first pass renders to a persistent buffer which is substantially smaller than the res of the image being drawn.  the second pass renders at the default requested size and scales up the image from the first pass",
-	"CREDIT": "by zoidberg",
-	"ISFVSN": "2.0",
-	"CATEGORIES": [
-		"TEST-GLSL FX"
-	],
-	"INPUTS": [
-		{
-			"NAME": "inputImage",
-			"TYPE": "image"
-		}
-	],
-	"PASSES": [
-		{
-			"TARGET":"bufferVariableNameA",
-			"PERSISTENT": true,
-			"WIDTH": "$WIDTH/16.0",
-			"HEIGHT": "$HEIGHT/16.0"
-		},
-		{
-		
-		}
-	]
-	
-}*/
-
-void main()
-{
-	//	first pass: read the "inputImage"- remember, we're drawing to the persistent buffer "bufferVariableNameA" on the first pass
-	if (PASSINDEX == 0)	{
-		gl_FragColor = IMG_THIS_NORM_PIXEL(inputImage);
-	}
-	//	second pass: read from "bufferVariableNameA".  output looks chunky and low-res.
-	else if (PASSINDEX == 1)	{
-		gl_FragColor = IMG_THIS_NORM_PIXEL(bufferVariableNameA);
-	}
-}
-```
-
-Like in our previous example, we had added the new `PASSES` section to the JSON blob.  This time there are two entries – the first is persistant and has a target name, the second contains no attributes.
-
-The first pass also has two new attributes: `WIDTH` and `HEIGHT` which can be used to resize the image before it is provided to the shader.  These attributes can be set to specific values, or you can enter in simple mathematically equations that allow them to vary depending on the actual width and height of the incoming image.  Declared uniform variables can also be used in these equations.  In this particular case the buffer will be resized to 1/16th its original width and height.
-
-In the code section itself, the new variable `PASSINDEX` is also used.  The `PASSINDEX` is a special automatically created uniform variable that is used to tell the main() {} function which rendering pass is currently being executed.  This allows you to write compound shaders that perform different operations on each pass.
-
-- The `PASSINDEX` starts at 0 and increments on each pass.  So the first pass is 0, the second pass is 1, the third is 2, and so on.
-- Because it is a uniform, the `PASSINDEX` variable is available to both the fragment and vertex shaders.
-
-### Creating a Multi-Pass Blur Effect
-
-As you may have noted in the previous chapter on convolution, a basic 3x3 kernel does not blur an image very much, unless you are very zoomed in.  One way to address this was to use larger kernel sizes that average together even more neighboring pixels on each pass.  The downside of using large kernels is that they are computationally very costly.
-
-Another way to create stronger blurring effects is to re-apply the blur multiple times in a single effect.
-
-Like with most things in GLSL, there are several ways you can go about writing a multi-pass blur and you can find several advanced examples on the ISF Sharing Site in the Blurs category.  In this section we will look at one of the more basic examples called Soft Blur.fs which is a 3-pass blur shader.
-
-First we will write the vertex shader.  This is exactly the same as the .vs we used for the basic convolution shaders in the previous chapter.
+Another commonly found kernel is the one for a `Box Blur`.  Many blur filters are based on this idea of averaging the middle pixel with the values around it.  The stronger the weights of the neighboring pixels in comparison to the middle, the stronger the blur.  In such cases it is important for the sum of all of the weights to be 1.0.
 
 ```
-//	Soft Blur.vs
+//	The Box Blur Kernel
+[0.11111, 0.11111, 0.11111,
+0.11111, 0.11111, 0.11111,
+0.11111, 0.11111, 0.11111]
+```
+
+Though box blurs and other similar blurs are easily created with convolutions, a single pass of a 3x3 kernel does not produce a particularly deep blurring effect.  In the next chapter covering multi-pass shaders we'll look at how performing these kernels more than once can greatly increase the depth of the blur.
+
+#### Sharpen Kernel
+
+Often considered the opposite of the blur is the sharpen, which subtracts values on the diagonals instead of averaging.  This can often make edges appear more pronounced.
+
+```
+//	The Sharpen Kernel
+[-1.0, 0.0, -1.0,
+0.0, 5.0, 0.0,
+-1.0, 0.0, -1.0]
+```
+
+Like with blurs, increasing the weight of the middle pixel compared to the amount subtracted will result in a stronger sharpening effect.  Similarly the sum of the weights must always be 1.0 for sharpen filters.
+
+#### Edge Detection Kernels
+
+In a similar fashion to sharpen kernels for edge detection the trick is to subtract.  However in this case, instead of the the sum of all of the weights being 1.0, they'll come out to 0.0;  this way it requires that certain pixels be much brighter for others to stay in the image, while most of them are set to black.
+
+```
+//	Edge Detection 1
+[1.0, 0.0, 1.0,
+0.0, -4.0, 0.0,
+1.0, 0.0, 1.0]
+```
+
+```
+//	Edge Detection 2
+[-1.0, -1.0, -1.0,
+-1.0, 8.0, -1.0,
+-1.0, -1.0, 1.0]
+```
+
+Just as there are many ways to write sharpen and blur filters with varying amount of strength based on the relative weights, the same is true of edge detection kernels.
+
+## Writing a Generalized Convolution Filter in ISF
+
+When creating GLSL shaders that evaluate convolution kernels it can be useful to make use of the vertex shader stage when possible.  Like with rotations this allows us to prepare coordinate values that are used for lookup during the fragment shader stage, saving valuable GPU time during rendering.
+
+### Create the Vertex Shader
+
+First we'll make the vertex shader for the convolution kernel.  Whether you are creating a generalized use case like in this example, or creating a shader based on a specific kernel, your vertex shader will likely look something like this:
+
+```
 varying vec2 left_coord;
 varying vec2 right_coord;
 varying vec2 above_coord;
@@ -180,7 +107,6 @@ varying vec2 lefta_coord;
 varying vec2 righta_coord;
 varying vec2 leftb_coord;
 varying vec2 rightb_coord;
-
 
 void main()
 {
@@ -200,7 +126,11 @@ void main()
 }
 ```
 
-Next we have the fragment shader:
+Here we've declared eight different varying vec2 variables, one for each of the neighboring pixels.  Combined with the middle coordinate itself located at `isf_FragNormCoord` this completes the calculations needed to do the image pixel lookups in the fragment shader stage.
+
+### Create the Fragment Shader
+
+Now we can create the fragment shader that performs the actual convolution.  For this generalized shader we declare 9 float values, one for each weight and give each a range of -8.0 to 8.0.  Only the middle pixel is set to 1.0 by default, so when first loaded the filter will function as a pass-thru.
 
 ```
 /*{
@@ -215,40 +145,140 @@ Next we have the fragment shader:
 			"TYPE": "image"
 		},
 		{
-			"NAME": "softness",
+			"NAME": "w00",
 			"TYPE": "float",
-			"MIN": 0.0,
-			"MAX": 1.0,
-			"DEFAULT": 0.9
+			"MIN": -8.0,
+			"MAX": 8.0,
+			"DEFAULT": 0.0
 		},
 		{
-			"NAME": "depth",
+			"NAME": "w10",
 			"TYPE": "float",
-			"MIN": 1.0,
-			"MAX": 10.0,
-			"DEFAULT": 10.0
-		}
-	],
-	"PASSES": [
-		{
-			"TARGET": "smaller",
-			"WIDTH": "max(floor($WIDTH*0.02),1.0)",
-			"HEIGHT": "max(floor($HEIGHT*0.02),1.0)"
+			"MIN": -8.0,
+			"MAX": 8.0,
+			"DEFAULT": 0.0
 		},
 		{
-			"TARGET": "small",
-			"WIDTH": "max(floor($WIDTH*0.25),1.0)",
-			"HEIGHT": "max(floor($HEIGHT*0.25),1.0)"
+			"NAME": "w20",
+			"TYPE": "float",
+			"MIN": -8.0,
+			"MAX": 8.0,
+			"DEFAULT": 0.0
 		},
 		{
-		
+			"NAME": "w01",
+			"TYPE": "float",
+			"MIN": -8.0,
+			"MAX": 8.0,
+			"DEFAULT": 0.0
+		},
+		{
+			"NAME": "w11",
+			"TYPE": "float",
+			"MIN": -8.0,
+			"MAX": 8.0,
+			"DEFAULT": 1.0
+		},
+		{
+			"NAME": "w21",
+			"TYPE": "float",
+			"MIN": -8.0,
+			"MAX": 8.0,
+			"DEFAULT": 0.0
+		},
+		{
+			"NAME": "w02",
+			"TYPE": "float",
+			"MIN": -8.0,
+			"MAX": 8.0,
+			"DEFAULT": 0.0
+		},
+		{
+			"NAME": "w12",
+			"TYPE": "float",
+			"MIN": -8.0,
+			"MAX": 8.0,
+			"DEFAULT": 0.0
+		},
+		{
+			"NAME": "w22",
+			"TYPE": "float",
+			"MIN": -8.0,
+			"MAX": 8.0,
+			"DEFAULT": 0.0
 		}
 	]
 }*/
 
 
-//	A simple three pass blur – first reduce the size, then do a weighted blur, then do the same thing 
+varying vec2 left_coord;
+varying vec2 right_coord;
+varying vec2 above_coord;
+varying vec2 below_coord;
 
+varying vec2 lefta_coord;
+varying vec2 righta_coord;
+varying vec2 leftb_coord;
+varying vec2 rightb_coord;
+
+
+void main()
+{
+	vec4 colorLA = IMG_NORM_PIXEL(inputImage, lefta_coord);
+	vec4 colorA = IMG_NORM_PIXEL(inputImage, above_coord);
+	vec4 colorRA = IMG_NORM_PIXEL(inputImage, righta_coord);
+
+	vec4 colorL = IMG_NORM_PIXEL(inputImage, left_coord);
+	vec4 color = IMG_THIS_NORM_PIXEL(inputImage);
+	vec4 colorR = IMG_NORM_PIXEL(inputImage, right_coord);
+	
+	vec4 colorLB = IMG_NORM_PIXEL(inputImage, leftb_coord);
+	vec4 colorB = IMG_NORM_PIXEL(inputImage, below_coord);
+	vec4 colorRB = IMG_NORM_PIXEL(inputImage, rightb_coord);
+
+	//	make the average for the RGB values
+	vec3 convolution = (w11 * color + w01 * colorL + w21 * colorR + w10 * colorA + w12 * colorB + w00 * colorLA + w20 * colorRA + w02 * colorLB + w22 * colorRB).rgb;
+	
+	//	keep the alpha the same as the original pixel
+	gl_FragColor = vec4(convolution,color.a);
+}
+```
+
+In the code section below the JSON, we can see that the `varying` vec2 variables from the vertex shader have also been declared here.  This makes it possible for those values to be read here in the fragment shader.
+
+Within the main() {} function the initial chunk of code gathers each neighboring pixel.  Next the convolution result vec3 RGB color is created by multiplying each pixel by its weight and adding them all together.  One small detail is that we use the alpha channel from the original pixel.
+
+## Creating Specific Kernels As Filters
+
+As you might imagine, getting a specific look by manipulating 9 different sliders can be a bit much.  This is why often it can be useful to pick a particular kernel and create a specific filter that includes a one or two high level parameters which modify the weights to adjust the strength.
+
+Note that for these examples we will use a vertex shader identical to the one used above for the general convolution case.  Be sure to duplicate that code in its own file with a name that matches your fragment shaders below and uses the `.vs` extension.
+
+### Creating a Varying Box Blur Filter in ISF
+
+A very simple blur filter that has a single strength value can be written as such.
+
+```
+/*{
+	"CREDIT": "by VIDVOX",
+	"ISFVSN": "2",
+	"CATEGORIES": [
+		"Blur"
+	],
+	"INPUTS": [
+		{
+			"NAME": "inputImage",
+			"TYPE": "image"
+		},
+		{
+			"NAME": "blurLevel",
+			"TYPE": "float",
+			"MIN": 0.0,
+			"MAX": 1.0,
+			"DEFAULT": 0.0
+		}
+	]
+}*/
 
 varying vec2 left_coord;
 varying vec2 right_coord;
@@ -262,184 +292,105 @@ varying vec2 rightb_coord;
 
 void main()
 {
+
+	float mWeight = 1.0 - blurLevel;
+	float nWeight = blurLevel / 8.0;
 	
 	vec4 color = IMG_THIS_NORM_PIXEL(inputImage);
-	vec4 colorL = IMG_NORM_PIXEL(inputImage, left_coord);
-	vec4 colorR = IMG_NORM_PIXEL(inputImage, right_coord);
-	vec4 colorA = IMG_NORM_PIXEL(inputImage, above_coord);
-	vec4 colorB = IMG_NORM_PIXEL(inputImage, below_coord);
-
-	vec4 colorLA = IMG_NORM_PIXEL(inputImage, lefta_coord);
-	vec4 colorRA = IMG_NORM_PIXEL(inputImage, righta_coord);
-	vec4 colorLB = IMG_NORM_PIXEL(inputImage, leftb_coord);
-	vec4 colorRB = IMG_NORM_PIXEL(inputImage, rightb_coord);
-
-	vec4 avg = (color + colorL + colorR + colorA + colorB + colorLA + colorRA + colorLB + colorRB) / 9.0;
 	
-	if (PASSINDEX == 1)	{
-		vec4 blur = IMG_THIS_NORM_PIXEL(smaller);
-		avg = mix(color, (avg + depth*blur)/(1.0+depth), softness);
-	}
-	else if (PASSINDEX == 2)	{
-		vec4 blur = IMG_THIS_NORM_PIXEL(small);
-		avg = mix(color, (avg + depth*blur)/(1.0+depth), softness);
-	}
-	gl_FragColor = avg;
+	//	note that we can skip the pixel lookups here if nWeight is 0.0
+	vec4 colorL = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, left_coord) : vec4(0.0);
+	vec4 colorR = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, right_coord) : vec4(0.0);
+	vec4 colorA = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, above_coord) : vec4(0.0);
+	vec4 colorB = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, below_coord) : vec4(0.0);
+
+	vec4 colorLA = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, lefta_coord) : vec4(0.0);
+	vec4 colorRA = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, righta_coord) : vec4(0.0);
+	vec4 colorLB = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, leftb_coord) : vec4(0.0);
+	vec4 colorRB = (nWeight > 0.0) ? IMG_NORM_PIXEL(inputImage, rightb_coord) : vec4(0.0);
+
+	vec3 blur = ((mWeight * color) + nWeight * (colorL + colorR + colorA + colorB + colorLA + colorRA + colorLB + colorRB)).rgb;
+	
+	gl_FragColor = vec4(blur,color.a);
 }
 ```
 
-Looking at the JSON blob in the `PASSES` section, we can see that there are three render passes.  The first two render passes use the `WIDTH` and `HEIGHT` attributes to resize the image being passed in.  This is a useful trick when creating multi-pass blur effects that averages together pixels during the size reduction and makes those averages the new neighboring pixels where they can be processed by the kernel.
+Unlike our previous box blur kernel which had fixed values, this determines its weights based on the `blurLevel` uniform variable declared in the JSON section.  As that value moves from 0.0 to 1.0, the weight of the neighbors increases while the weight of the middle pixel decreases.  Recall that for a blur or sharpen we need the sum of our weights to be 1.0.
 
-On each rendering pass the basic Box Blur kernel is applied and sent to the output.  When the `PASSINDEX` is 1 or 2 (on the 2nd and third render passes), the result of the Box Blur is combined with the result from the previous pass.  Instead of directly changing the kernel, the declared `INPUT` variables are used to adjust the amount of this blending.
+As a challenge, try adapting one of the other kernels we looked at, such as the sharpen kernel, and adapt this code to apply it instead of the box blur.
 
-## Other uses of persistant buffers and multi-pass shaders
+### Creating Convolution Filters With For Loops
 
-### Conway's Game of Life
-
-In computing simulation, one of the most famous algorithms is known as Conway's Game of Life.  Game of Life is a cellular automaton devised by the British mathematician John Horton Conway in 1970.  Though it is called a game, there aren't any players - the board starts with a random or preconfigured state and then evolves from there.
-
-The [Wikipedia page on Game of Life](https://en.wikipedia.org/wiki/Conway's_Game_of_Life) describes the rules as such:
-
-	The universe of the Game of Life is an infinite two-dimensional orthogonal grid of square cells, each of which is in one of two possible states, alive or dead, or "populated" or "unpopulated". Every cell interacts with its eight neighbours, which are the cells that are horizontally, vertically, or diagonally adjacent. At each step in time, the following transitions occur:
-
-	- Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
-	- Any live cell with two or three live neighbours lives on to the next generation.
-	- Any live cell with more than three live neighbours dies, as if by overpopulation.
-	- Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-	
-The idea of comparing a cell to its surround eight neighbors sounds an awful lot like what we have been doing with our convolution filters.  The only difference here is instead of using a kernel to process an incoming image, we'll need to start with some initial state and then iterate on that.
-
-For this shader we can once again re-use the basic convolution vertex shader and include the matching `varying` variables in the fragment shader below.
+In the examples so far we've used a vertex shader to pre-compute our coordinate points used in our fragment shaders.  While this is recommended when possible, there are times when your algorithm may use an indeterminate number of lookup points, or the lookup points may vary depending on other factors within your fragment shader code.
 
 ```
-/*{
-	"DESCRIPTION": "Based on Conway's Game of Life",
-	"CREDIT": "VIDVOX",
-	"ISFVSN": "2",
-	"CATEGORIES": [
-		"Generator"
-	],
-	"INPUTS": [
-		{
-			"NAME": "restartNow",
-			"TYPE": "event"
-		},
-		{
-			"NAME": "startThresh",
-			"TYPE": "float",
-			"DEFAULT": 0.5,
-			"MIN": 0.0,
-			"MAX": 1.0
-		}
-	],
-	"PASSES": [
-		{
-			"TARGET":"lastData",
-			"PERSISTENT": true
-		}
-	]
-	
-}*/
-
 /*
-
-Any live cell with fewer than two live neighbours dies, as if caused by under-population.
-Any live cell with two or three live neighbours lives on to the next generation.
-Any live cell with more than three live neighbours dies, as if by over-population.
-Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-
+{
+  "CATEGORIES" : [
+    "Blur"
+  ],
+  "DESCRIPTION" : "",
+  "ISFVSN" : "2",
+  "INPUTS" : [
+    {
+      "NAME" : "inputImage",
+      "TYPE" : "image"
+    },
+    {
+      "NAME" : "blurLevel",
+      "TYPE" : "float",
+      "MAX" : 1,
+      "DEFAULT" : 0.5,
+      "MIN" : 0
+    }
+  ],
+  "CREDIT" : "by VIDVOX"
+}
 */
 
-varying vec2 left_coord;
-varying vec2 right_coord;
-varying vec2 above_coord;
-varying vec2 below_coord;
-
-varying vec2 lefta_coord;
-varying vec2 righta_coord;
-varying vec2 leftb_coord;
-varying vec2 rightb_coord;
-
-//	used to get the grayscale version of a pixel
-float gray(vec4 n)
-{
-	return (n.r + n.g + n.b)/3.0;
-}
-
-//	used to randomize the start state
-float rand(vec2 co){
-    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
-}
-
 void main()	{
-	vec4		inputPixelColor = vec4(0.0);
-	vec2		loc = gl_FragCoord.xy;
-	
-	//	if we are starting or the restartNow event is active, randomize
-	if ((FRAMEINDEX < 1)||(restartNow))	{
-		//	randomize the start conditions
-		float	alive = rand(vec2(TIME+1.0,2.1*TIME+0.1)*loc);
-		if (alive > 1.0 - startThresh)	{
-			inputPixelColor = vec4(1.0);
+	float mWeight = 1.0 - blurLevel;
+	float nWeight = blurLevel / 8.0;
+	vec4 result = vec4(0.0);
+	if (blurLevel > 0.0)	{
+		for (int i = -1;i <= 1;++i)	{
+			for (int j = -1;j <= 1;++j)	{
+				vec2 loc = gl_FragCoord.xy + vec2(i,j);
+				vec4 color = IMG_PIXEL(inputImage,loc);
+				if ((i == 0)&&(j == 0))	{
+					result.rgb += mWeight * color.rgb;
+					result.a = color.a;
+				}
+				else	{
+					result.rgb += nWeight * color.rgb;
+				}
+			}
 		}
 	}
 	else	{
-		vec4	color = IMG_PIXEL(lastData, loc);
-		vec4	colorL = IMG_PIXEL(lastData, left_coord);
-		vec4	colorR = IMG_PIXEL(lastData, right_coord);
-		vec4	colorA = IMG_PIXEL(lastData, above_coord);
-		vec4	colorB = IMG_PIXEL(lastData, below_coord);
-
-		vec4	colorLA = IMG_PIXEL(lastData, lefta_coord);
-		vec4	colorRA = IMG_PIXEL(lastData, righta_coord);
-		vec4	colorLB = IMG_PIXEL(lastData, leftb_coord);
-		vec4	colorRB = IMG_PIXEL(lastData, rightb_coord);
-		
-		float	neighborSum = gray(colorL + colorR + colorA + colorB + colorLA + colorRA + colorLB + colorRB);
-		float	state = gray(color);
-		
-		//	live cell
-		if (state > 0.0)	{
-			if (neighborSum < 2.0)	{
-				//	under population
-				inputPixelColor = vec4(0.0);
-			}
-			else if (neighborSum < 4.0)	{
-				//	status quo
-				inputPixelColor = vec4(1.0);
-			}
-			else	{
-				//	over population
-				inputPixelColor = vec4(0.0);
-			}
-		}
-		//	dead cell
-		else	{
-			if ((neighborSum > 2.0)&&(neighborSum < 4.0))	{
-				//	reproduction
-				inputPixelColor = vec4(1.0);
-			}
-			else if (neighborSum < 2.0)	{
-				//	stay dead
-			}
-		}
+		result = IMG_THIS_NORM_PIXEL(inputImage);	
 	}
 	
-	gl_FragColor = inputPixelColor;
+	gl_FragColor = result;
 }
 ```
 
-Walking through this code, the initial `if` statement is used to determine if the shader needs to randomize the state.  This happens under one of two conditions, either the `FRAMEINDEX` is 0 (the first frame) or the `restartNow` uniform (declared as an `event` type in the JSON blob) has been set to true by the host application.  The initial state is created by calling our custom rand() function which creates pseudo-random numbers between 0.0 and 1.0.  When these numbers are above the startThresh, the pixel starts as alive.
+Here instead of using the vertex shader to pre-compute the lookup points and pass them over with varying variables, the lookup points are computed each time inside of the for loop.  With this method it would be easy to adapt this blur to doing a 5x5 neighbor pixel averaging without having to declare any new variables.
 
-When the state is not being randomized, we follow the ruleset.  There are two pieces of information we need to collect and based on those there can result in four possible outcomes.  In particular we need to know the current alive / dead state of the current pixel (1 or 0) and we need to know the summation of the states of the neighboring pixels.  Here the `state` variable holds the state of the current pixel and `neighborSum` is used to hold the sum of the surrounding 8 pixels.
+As a note, it is recommended to avoid doing too many pixel lookups and comparisons within your code.  While there is no technical limit on this these operations are comparatively costly.  In some cases you can write in optimizations, such as for situations where you know a weight value for a pixel is 0.0, you can skip its corresponding lookup.
 
-Once this information is collected we can create a set of `if` statements based on their values, starting with whether or not the state is 1 or 0.  When the cell is alive, it can die as a result of over or under population, otherwise it stays the same.  When the cell is dead, it can become alive due to reproduction if there are enough neighboring living cells.
+### More Examples Of Convolution Shaders
 
-This simple set of rules creates a wide variety of different outcomes and the basic concept of cellular automaton can be used as a starting point for creating evolving behaviors within other shaders.  Recall that with ISF, you can make Game of Life just the first of multiple render passes that use the state information as part of more complex generators or effects.
+A number of the sample shaders on the [ISF Sharing Website](http://interactiveshaderformat.com) are great examples of convolution filters.  As hinted at, many of the convolution shaders that are used in actual practice use another advanced technique that we will soon learn about for creating ISF compositions with multiple render passes.
 
-The Game of Life shader itself can be remixed in various interesting ways.  Here are a few challenges:
-- Create a version that uses the RGB channels to run three different simulations in a single output.
-- Add an option to switch between pseudo-random numbers and sin waves for the starting state.
-- Add options for random birth and random death of cells.
-- Change the rules to increase or decrease the birth rate.
+## Other Similar Use Cases
 
+Though not technically considered convolution filters because they don't just simply apply a kernel to a set of pixels, there are many visual effects that can be created by comparing a pixel to its neighbors.  Once you have the data in vec4 variables you can apply whatever functions or operations you can think of to combine the values into a single result.
+
+Here are a few filters in particular that use a similar technique:
+- An `Erode` effect searches surrounding pixels looking for minimum values.
+- A `Dilate` effect searches surrounding pixels looking for maximum values.
+- A `Frosted Glass` style effect can blend together several local pixels in a non-standard pattern.
+- An `Emboss` effect uses a combination of a convolution kernel and other post processing to create its output.
+
+Examples of these shaders and other related examples can be found on [ISF Sharing Website](http://interactiveshaderformat.com).
