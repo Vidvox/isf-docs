@@ -1,12 +1,23 @@
 # ISF Quick Start
 
-- Introduction
+In this guide we will cover the following topics:
+- Introduction to the ISF Quick Start
 - Using ISF Compositions
 - Creating ISF Compositions
+- Automatically Created Uniforms and Variables in ISF
+- Timed Animations
+- Adding Interface Controls
+- Making Image Effect Filters
+- Including Vertex Shaders
+- Multi-Pass Shaders
+- Persistent Buffers
+- Audio Waveforms and FFTs
+- Converting Non-ISF GLSL Shaders to ISF
+- Next Steps
 
-## Introduction
+## Introduction to the ISF Quick Start
 
-If you are already somewhat familiar with programming, this quick start guide is a quick way to learn the basics of creating GLSL shaders to meet the ISF specification.  Shaders written in ISF can be used as visual generators, effects and transitions in supported software.
+If you are already somewhat familiar with programming, this quick start guide is a quick way to learn the basics of creating GLSL shaders to meet the ISF specification.  Shaders written in the [Interactive Shader Format](http://vidvox.github.com/isf/), also known as ISF, can be used as visual generators, effects and transitions in supported software.
 
 For a more in depth lessons on learning GLSL and ISF you can read the [ISF Primer](http://vidvox.github.com/isf/primer).  Additionally the [ISF Reference Pages](https://vidvox.github.io/isf/ref) are a useful set of documents to keep on hand when writing and remixing ISF compositions.  Developers interested in supporting ISF in their own software can visit the [ISF Specification Page](https://github.com/mrRay/ISF_Spec/) for detailed information and links to useful sample code.
 
@@ -91,7 +102,7 @@ The output of this example should vary red over the x-axis and green over the y-
 
 In the ISF References Pages you can find a list of [automatic uniforms in ISF](https://vidvox.github.io/isf/ref/variables) and [built-in functions](https://vidvox.github.io/isf/ref/functions).
 
-## Animations
+## Timed Animations
 
 Next create another shader called "time animation.fs" and paste in the following code:
 
