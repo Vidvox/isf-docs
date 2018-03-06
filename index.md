@@ -26,14 +26,14 @@ Whether you are a GLSL expert or just getting started, there are several resourc
 
 - The [ISF Quick Start](quickstart/) is a guide to quickly get started with writing GLSL shaders in the ISF specification.  A good starting point for people who already know how to code and are just looking to understand the core concepts of ISF.
 - The [ISF Reference Pages](ref/) contain an overview of the available built-in variables, functions and other conventions used by ISF as a quick reference for shader developers.
-- The [ISF Primer](primer/) is a set of lessons to help guide you through writing your first shaders in ISF.
+- The [ISF Primer](primer/) is a set of in depth lessons with walkthroughs for writing your first GLSL shaders and discussion of advanced usages of the ISF specification.
 - The [ISF Specification Page](https://github.com/mrRay/ISF_Spec/) contains detailed information about ISF for shader and application developers, along with links to source code repositories and other useful resources.
 
 ### Software tools and sample files
 
 Though you can create or modify ISF compositions using any standard text editor it can often be useful be able to have a specialized interface that makes it easier to see your output and debug your code.
 
-#### ISF Web Editor
+#### The ISF Web Editor
 
 - ISF files can be created, viewed and shared online at the [isf.video](http://interactiveshaderformat.com) website.  These are some of its basic features:
 	- Browse, preview and download shaders from the online community.
@@ -55,7 +55,7 @@ Though you can create or modify ISF compositions using any standard text editor 
 
 - Here are a bunch of simple test ISF files that demonstrate ISF's basic features (these are test filters, and we don't expect them to have signifcant creative use):
 [ISF Test/Tutorial filters](http://vidvox.net/rays_oddsnends/ISF%20tests+tutorials.zip)
-- [Here's an installer](http://www.vidvox.net/rays_oddsnends/Vidvox%20ISF%20resources.pkg.zip) for over a hundred different ISF files, both images and filters.  The installer places them in /Library/Graphics/ISF where they can be accessed by all users.
+- [Here is an installer](http://www.vidvox.net/rays_oddsnends/Vidvox%20ISF%20resources.pkg.zip) for over a hundred different ISF files, both images and filters.  The installer places them in /Library/Graphics/ISF where they can be accessed by all users.
 
 ## Adding Support For ISF in 3rd Party Software
 
