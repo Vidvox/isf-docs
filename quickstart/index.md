@@ -38,7 +38,7 @@ Additional discussion and examples can be found in the [ISF Primer chapter on us
 
 You can create ISF compositions using a variety of different tools:
 - There is a free [ISF Editor online](http://interactiveshaderformat.com).
-- There is a free [ISF Editor for Mac](http://www.vidvox.net/rays_oddsnends/ISF%20Editor_2.9.3.zip).
+- There is a free [ISF Editor for Mac](http://www.vidvox.net/rays_oddsnends/ISF_Editor_2.9.7.zip).
 - You can use any standard text editor.  If you are using an app like TextEdit, make sure to use the "Make Plain Text" option from the "Format" menu.
 - Additional discussion about development tools can be found in the [ISF Primer chapter on creating ISF Compositions](http://vidvox.github.io/isf/primer/3).
 

@@ -13,8 +13,8 @@ This reference contains a set of useful notes for writing GLSL shaders to meet t
     
 ## Sample Files
 
-- Here are a bunch of simple test ISF files that demonstrate ISF's basic features (these are test filters, and we don't expect them to have signifcant creative use):
-[ISF Test/Tutorial filters](http://vidvox.net/rays_oddsnends/ISF%20tests+tutorials.zip)
+- Here is a collection of simple test ISF files that demonstrate ISF's basic features.  These are test filters, they aren't intended to have signifcant creative use:
+[ISF Test/Tutorial filters](http://vidvox.net/rays_oddsnends/ISF%20tests+tutorials.zip
 - [Here's an installer](http://www.vidvox.net/rays_oddsnends/Vidvox%20ISF%20resources.pkg.zip) for over a hundred different ISF files, both images and filters.  The installer places them in /Library/Graphics/ISF where they can be accessed by all users.
 
 ## Additional Resources

@@ -66,7 +66,7 @@ In these tutorials we'll look at how to write GLSL shaders that meet the ISF spe
 ### Tools and Downloads
 
 Before starting creating your own shaders, you may want to have the following on hand:
-- You can write ISF generators and FX using any standard text editor, or you can use a dedicated tool such as the free [ISF Editor for Mac](http://www.vidvox.net/rays_oddsnends/ISF%20Editor_2.9.3.zip), or use the [isf.video](http://interactiveshaderformat.com) web interface to create your sketches.
+- You can write ISF generators and FX using any standard text editor, or you can use a dedicated tool such as the free [ISF Editor for Mac](http://www.vidvox.net/rays_oddsnends/ISF_Editor_2.9.7.zip), or use the [isf.video](http://interactiveshaderformat.com) web interface to create your sketches.
 - The [ISF Test/Tutorial filters](http://vidvox.net/rays_oddsnends/ISF%20tests+tutorials.zip) is a useful collection of reference and test shaders.  They aren't particularly interesting but they do a good job of demonstrating specific functionality.
 
 ### Additional GLSL Resources
