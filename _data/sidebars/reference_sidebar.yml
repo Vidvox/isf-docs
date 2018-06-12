@@ -1,0 +1,32 @@
+# This is your sidebar TOC. The sidebar code loops through sections here and provides the appropriate formatting.
+
+
+entries:
+- title: Sidebar
+  levels: one
+  folders:
+
+  - title: Sections
+    output: web
+    folderitems:
+    - title: Overview
+      url: /ref_index.html
+      output: web
+    - title: Variables
+      url: /ref_variables.html
+      output: web
+    - title: Functions
+      url: /ref_functions.html
+      output: web
+    - title: Multi-Pass Shaders and Persistant Buffers
+      url: /ref_multipass.html
+      output: web
+    - title: JSON
+      url: /ref_json.html
+      output: web
+    - title: Converting
+      url: /ref_converting.html
+      output: web
+    - title: Changes
+      url: /ref_changes.html
+      output: web

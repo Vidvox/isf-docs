@@ -3,14 +3,14 @@
 topnav:
 - title: Topnav
   items:
-    - title: Samples
-      external_url: https://interactiveshaderformat.com
     - title: QuickStart
       url: /quickstart
     - title: Primer
       url: /primer
     - title: Spec
       external_url: https://github.com/mrRay/ISF_Spec/
+    - title: Samples
+      external_url: https://www.interactiveshaderformat.com/
 
 #Topnav dropdowns
 topnav_dropdowns:
@@ -19,17 +19,17 @@ topnav_dropdowns:
     - title: Reference
       folderitems:
         - title: Automatically Created Variables, Uniforms and Constants
-          url: /ref/variables/
+          url: /ref/ref_variables
         - title: Built-In Functions
-          url: /ref/functions/
+          url: /ref/ref_functions
         - title: Multi-Pass Shaders and Persistant Buffers
-          url: /ref/multipass/
+          url: /ref/ref_multipass
         - title: ISF JSON Attributes
-          url: /ref/json/
+          url: /ref/ref_json
         - title: Converting Non-ISF GLSL shaders to ISF
-          url: /ref/converting/
+          url: /ref/ref_converting
         - title: Change Log
-          url: /ref/changes/
+          url: /ref/ref_changes
 
 
 

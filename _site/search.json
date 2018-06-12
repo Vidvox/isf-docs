@@ -1,0 +1,46 @@
+[
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+"title": "Sample post",
+"tags": "newsgetting_started",
+"keywords": "",
+"url": "samplepost.html",
+"summary": "This is some summary frontmatter for my sample post."
+}
+,
+
+
+{
+"title": "Welcome to Jekyll!",
+"tags": "news",
+"keywords": "",
+"url": "myupdate.html",
+"summary": ""
+}
+,
+
+
+{
+"title": "Test post from last year",
+"tags": "news",
+"keywords": "",
+"url": "test-post-from-last-year.html",
+"summary": ""
+}
+
+
+
+]

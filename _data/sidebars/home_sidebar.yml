@@ -14,8 +14,8 @@ entries:
     - title: Primer
       url: /primer
       output: web
-    - title: Primer
-      url: /primer
+    - title: Reference
+      url: /ref
       output: web
     - title: Spec
       external_url: https://github.com/mrRay/ISF_Spec/
