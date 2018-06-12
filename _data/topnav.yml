@@ -19,17 +19,17 @@ topnav_dropdowns:
     - title: Reference
       folderitems:
         - title: Automatically Created Variables, Uniforms and Constants
-          url: /ref/ref_variables
+          url: /ref_variables.html
         - title: Built-In Functions
-          url: /ref/ref_functions
+          url: /ref_functions.html
         - title: Multi-Pass Shaders and Persistant Buffers
-          url: /ref/ref_multipass
+          url: /ref_multipass.html
         - title: ISF JSON Attributes
-          url: /ref/ref_json
+          url: /ref_json.html
         - title: Converting Non-ISF GLSL shaders to ISF
-          url: /ref/ref_converting
+          url: /ref_converting.html
         - title: Change Log
-          url: /ref/ref_changes
+          url: /ref_changes.html
 
 
 

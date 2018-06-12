@@ -9,13 +9,13 @@ entries:
     output: web
     folderitems:
     - title: QuickStart
-      url: /quickstart
+      url: /quickstart.html
       output: web
     - title: Primer
-      url: /primer
+      url: /primer_index.html
       output: web
     - title: Reference
-      url: /ref
+      url: /ref_index.html
       output: web
     - title: Spec
       external_url: https://github.com/mrRay/ISF_Spec/

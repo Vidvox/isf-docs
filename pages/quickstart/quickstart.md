@@ -9,23 +9,6 @@ permalink: quickstart.html
 folder: quickstart
 ---
 
-# ISF Quick Start
-
-In this guide we will cover the following topics:
-- Introduction to the ISF Quick Start
-- Using ISF Compositions
-- Creating ISF Compositions
-- Automatically Created Uniforms and Variables in ISF
-- Timed Animations
-- Adding Interface Controls
-- Making Image Effect Filters
-- Including Vertex Shaders
-- Multi-Pass Shaders
-- Persistent Buffers
-- Audio Waveforms and FFTs
-- Converting Non-ISF GLSL Shaders to ISF
-- Next Steps
-
 ## Introduction to the ISF Quick Start
 
 If you are already somewhat familiar with programming, this quick start guide is a quick way to learn the basics of creating GLSL shaders to meet the ISF specification.  Shaders written in the [Interactive Shader Format](http://vidvox.github.com/isf/), also known as ISF, can be used as visual generators, effects and transitions in supported software.
