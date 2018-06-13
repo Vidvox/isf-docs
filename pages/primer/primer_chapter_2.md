@@ -206,7 +206,7 @@ void main()
 ```
 
 Here there isn't much new in our JSON blob other than we've added a second color variable.  In the GLSL code there are two important details to check out:
-- We've introduced 'mix' as our first function other than the 'main' function.  The mix function can take two colors and a floating point number from 0.0 to 1.0 as inputs and returns a color that somewhere in between the provided colors based on the provided mix percentage.  GLSL provides many useful [built-in functions](https://vidvox.github.io/isf/ref/functions) and you can create your own re-usable functions which can be useful for writing concise code.
+- We've introduced 'mix' as our first function other than the 'main' function.  The mix function can take two colors and a floating point number from 0.0 to 1.0 as inputs and returns a color that somewhere in between the provided colors based on the provided mix percentage.  GLSL provides many useful [built-in functions](ref_functions) and you can create your own re-usable functions which can be useful for writing concise code.
 - As the position of the mix percentage we've entered 'isf_FragNormCoord.x' which tells the shader to use the normalized x position for the current position.  As mentioned above, the normalized value goes from 0.0 on the left to 1.0 on the right side of the texture frame.  To have this displayed as a vertical gradient, you can change this variable to 'isf_FragNormCoord.y'.
 
 

@@ -11,12 +11,13 @@ summary: An overview of ISF, the topics covered in these documentation pages and
 
 ISF stands for "Interactive Shader Format", and is a file format that describes a GLSL fragment shader, as well as how to execute and interact with it. The goal of this file format is to provide a simple and minimal interface for image filters and generative video sources that allows them to be interacted with and reused in a generic and modular fashion. ISF is nothing more than a [slightly modified] GLSL fragment shader with a JSON blob at the beginning that describes how to interact with the shader (how many inputs/uniform variables it has, what their names are, what kind of inputs/variables they are, that sort of thing). ISF isn't some crazy new groundbreaking technology- it's just a simple and useful combination of two things that have been around for a while to make a minimal- but highly effective- filter format.
 
-## Using ISF
+## Using ISF Compositions
 
-- Shaders written in the ISF specification can be used in supported environments on desktop, mobile and the web.  To use ISF files in a specific piece of software consult the appropriate documentation.
-- ISF files that you would like to be globally available to all software on your Mac can be placed in the "/Library/Graphics/ISF" or "~/Library/Graphics/ISF" directories.  Generators, filters and transitions in these directories should generally be automatically available within supported software where applicable. 
-- ISF files can be created, viewed and shared online at the [isf.video](http://interactiveshaderformat.com) website.
-- ISF shaders can be made as full page standalone webpages, with or without controls.  An example implementation can be found in the [ISF Generator Example on Glitch](https://glitch.com/edit/#!/isf-example?path=README.md).
+Shaders written in the ISF specification can be used in supported environments on desktop, mobile and the web.  To use ISF files in a specific piece of software consult the appropriate documentation.
+
+- In many cases, ISF generator files can be directly loaded into the media bin / media player section of host software.
+- ISF files that you would like to be globally available to all software on your Mac can be placed in the "/Library/Graphics/ISF" or "~/Library/Graphics/ISF" directories.  Generators, filters and transitions in these directories should generally be automatically available within supported software where applicable.
+
 
 ### Supported software
 
@@ -26,6 +27,8 @@ The ISF specification was original created for [VDMX](http://vidvox.net) and is 
 - [Mad Mappper](http://madmapper.com/)
 - [Millumin](http://www.millumin.com/)
 - [VDMX](http://vidvox.net)
+- ISF shaders can be made as full page standalone webpages, with or without controls.  An example implementation can be found in the [ISF Generator Example on Glitch](https://glitch.com/edit/#!/isf-example?path=README.md).
+- ISF files can be created, viewed and shared online at the [interactiveshaderformat.com](http://interactiveshaderformat.com) website.
 
 ## Creating and Remixing ISF Compositions
 
@@ -34,7 +37,7 @@ Whether you are a GLSL expert or just getting started, there are several resourc
 ### Online resources
 
 - The [ISF Quick Start](quickstart) is a guide to quickly get started with writing GLSL shaders in the ISF specification.  A good starting point for people who already know how to code and are just looking to understand the core concepts of ISF.
-- The [ISF Reference Pages](ref) contain an overview of the available built-in variables, functions and other conventions used by ISF as a quick reference for shader developers.
+- The [ISF Reference Pages](ref_index) contain an overview of the available built-in variables, functions and other conventions used by ISF as a quick reference for shader developers.
 - The [ISF Primer](primer_index) is a set of in depth lessons with walkthroughs for writing your first GLSL shaders and discussion of advanced usages of the ISF specification.
 - The [ISF Specification Page](https://github.com/mrRay/ISF_Spec/) contains detailed information about ISF for shader and application developers, along with links to source code repositories and other useful resources.
 

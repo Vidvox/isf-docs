@@ -320,7 +320,7 @@ It is up to you to decide which style works the best for your own needs and you 
 
 Along with the variables that you explicitly declare within the JSON and code portions of your composition, GLSL and ISF each provide several default variables and constants that you can access.
 
-You can also find this list the on [ISF and GLSL Variables and Uniforms Reference Page](https://vidvox.github.io/isf/ref/variables) for quick lookup.
+You can also find this list the on [ISF and GLSL Variables and Uniforms Reference Page](ref_variables) for quick lookup.
 
 - vec4 gl_FragCoord;  is automatically declared, hold the values of the fragment coordinate vector are given in the window coordinate system.  In 2D space the .xy from this can be used to get the non-normalized pixel location.
 - vec2 isf_FragNormCoord is automatically declared. This is a convenience variable, and repesents the normalized coordinates of the current fragment ([0,0] is the bottom-left, [1,1] is the top-right).
@@ -334,7 +334,7 @@ Each of these can be referenced as read-only from within your GLSL code.
 
 ## Built-In Functions
 
-Along with your 'main' function and any other custom functions declared in your code, GLSL and ISF each provide a set of useful built-in functions for you to take advantage of. In this section we'll look at a handful of these functions and you can find a more extensive list on the [ISF and GLSL Functions Reference Page](https://vidvox.github.io/isf/ref/functions).
+Along with your 'main' function and any other custom functions declared in your code, GLSL and ISF each provide a set of useful built-in functions for you to take advantage of. In this section we'll look at a handful of these functions and you can find a more extensive list on the [ISF and GLSL Functions Reference Page](ref_functions).
 
 ### ISF Exclusive Functions
 
@@ -512,11 +512,11 @@ vec3 mix(vec3 x, vec3 y, float a)
 vec4 mix(vec4 x, vec4 y, float a)
 ```
 
-Similar functions for interpolation include `step` and `smoothstep`, both of which you can read more about on the [ISF and GLSL Functions Reference Page](https://vidvox.github.io/isf/ref/functions).
+Similar functions for interpolation include `step` and `smoothstep`, both of which you can read more about on the [ISF and GLSL Functions Reference Page](ref_functions).
 
 #### Other functions
 
-In future chapers we'll look at some other functions but it is also recommended that you take a quick look through the [ISF and GLSL Functions Reference Page](https://vidvox.github.io/isf/ref/functions) to get a sense of what else is available.
+In future chapers we'll look at some other functions but it is also recommended that you take a quick look through the [ISF and GLSL Functions Reference Page](ref_functions) to get a sense of what else is available.
 
 ## GLSL Statements
 
@@ -766,6 +766,6 @@ And example of a filled in do-while loop might look something like this:
 
 ## End of the chapter
 
-In this chapter we have covererd a lot of new material, both related to ISF and the language of GLSL itself.  This has included an introduction to the different data types that are available in GLSL and how to declare them in ISF's JSON blob, creating our own custom functions and finallly the concepts of conditional statements and loops which are used to add logic branches into our code.  We also examined the automatically created uniforms provided by ISF and some of the provided built-in functions which are further discussed in the [ISF Reference Pages](https://vidvox.github.io/isf/ref/).
+In this chapter we have covererd a lot of new material, both related to ISF and the language of GLSL itself.  This has included an introduction to the different data types that are available in GLSL and how to declare them in ISF's JSON blob, creating our own custom functions and finallly the concepts of conditional statements and loops which are used to add logic branches into our code.  We also examined the automatically created uniforms provided by ISF and some of the provided built-in functions which are further discussed in the [ISF Reference Pages](ref_index).
 
 Now that we've gotten a lot of the basics out of the way we can begin to move into some of the more advanced topics and example shaders.

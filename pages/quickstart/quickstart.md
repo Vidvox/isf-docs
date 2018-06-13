@@ -186,7 +186,7 @@ void main() {
 }
 ```
 
-The [ISF JSON Reference](https://vidvox.github.io/isf/ref/json) contains a detailed listing of the various supported input types and attributes which includes conventions for passing in both scalar types like `float` and `bool`, vector types like `vec2` (for points) and `vec4` (for colors), and special types like image and audio data.
+The [ISF JSON Reference](ref_json) contains a detailed listing of the various supported input types and attributes which includes conventions for passing in both scalar types like `float` and `bool`, vector types like `vec2` (for points) and `vec4` (for colors), and special types like image and audio data.
 
 Further discussion and examples can be found in the [ISF Primer chapter on the anatomy of an ISF composition](primer_chapter_2).
 
@@ -231,9 +231,9 @@ void main()
 
 This very simple example demonstrates the two important details when creating image filters:
 - Including the "inputImage" as an element in the `INPUTS` section of the JSON blob.
-- Using the `IMG_NORM_PIXEL()` function to get the color of a particular normalized pixel.  Within ISF, this function and its non-normalized counterpart `IMG_PIXEL()` replace the functions `texture2D()` or `texture2DRect()`.  More information can be found on the [ISF built-in functions](https://vidvox.github.io/isf/ref/functions) reference page.
+- Using the `IMG_NORM_PIXEL()` function to get the color of a particular normalized pixel.  Within ISF, this function and its non-normalized counterpart `IMG_PIXEL()` replace the functions `texture2D()` or `texture2DRect()`.  More information can be found on the [ISF built-in functions](ref_functions) reference page.
 
-ISF compositions can include more than one image input, making it possible to pass in additional data to be used for things like masking and distortion effects.  Additional information on declaring image inputs and the image filter convention can be found in the[ISF JSON Reference](https://vidvox.github.io/isf/ref/json).
+ISF compositions can include more than one image input, making it possible to pass in additional data to be used for things like masking and distortion effects.  Additional information on declaring image inputs and the image filter convention can be found in the[ISF JSON Reference](ref_json).
 
 ## Including Vertex Shaders
 

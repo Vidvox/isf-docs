@@ -113,7 +113,7 @@ Another useful way to represent this information is in polar coordinates, where 
 
 Converting to and from polar coordinates and traditional Cartesian coordinate spaces is easy, as you will see in the rotation filter code below.
 
-GLSL provides many built-in functions for working with angles and trigonometry, a list of which can be found in the [ISF and GLSL Variables and Uniforms Reference Page](https://vidvox.github.io/isf/ref/variables) for quick lookup.
+GLSL provides many built-in functions for working with angles and trigonometry, a list of which can be found in the [ISF and GLSL Variables and Uniforms Reference Page](ref_variables) for quick lookup.
 
 ### Rotation in a Fragment Shader
 
