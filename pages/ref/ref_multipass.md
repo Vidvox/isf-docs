@@ -4,7 +4,7 @@ tags: [Multi-pass, Persistant Buffers]
 keywords: PASSINDEX, PERSISTENT
 last_updated: June 12, 2018
 summary: "An overview of using multi-pass and persistant buffers in ISF."
-sidebar: reference_sidebar
+sidebar: home_sidebar
 permalink: ref_multipass.html
 folder: ref
 ---

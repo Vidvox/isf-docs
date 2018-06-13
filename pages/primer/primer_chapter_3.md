@@ -1,3 +1,14 @@
+---
+title: Using and Creating ISF Compositions
+tags: [Primer, Introduction]
+keywords: getting_started
+last_updated: June 12, 2018
+summary: "A closer look at how to use and create ISF compositions."
+sidebar: home_sidebar
+permalink: primer_chapter_3.html
+folder: primer
+---
+
 # Using ISF Compositions
 
 One of the key details of creating shaders in the ISF specification is that they can be used in host applications as generators, effects and transitions.  While an individual composition can be a lot of fun on its own, the real power of ISF comes from being able to include them as smaller re-usable elements in larger projects.

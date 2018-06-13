@@ -1,3 +1,14 @@
+---
+title: Data Types, Standard Variables and Functions
+tags: [Primer, Introduction]
+keywords: getting_started
+last_updated: June 12, 2018
+summary: "A closer look at the data types and functions available in GLSL and ISF."
+sidebar: home_sidebar
+permalink: primer_chapter_4.html
+folder: primer
+---
+
 # Data Types, Standard Variables and Functions
 
 As a language, GLSL is made up of several different building blocks that make up its foundation.  The four that we'll be investigating in this chapter are:

@@ -4,7 +4,7 @@ tags: [JSON, Reference]
 keywords: PASSINDEX, PERSISTENT, INPUTS, VSN, ISFVSN, CREDIT, DESCRIPTION, CATEGORIES, MIN, MAX, DEFAULT, TARGET, IMPORTED, LABEL
 last_updated: June 12, 2018
 summary: "An overview of JSON formatting and tags for ISF."
-sidebar: reference_sidebar
+sidebar: home_sidebar
 permalink: ref_json.html
 folder: ref
 ---

@@ -1,3 +1,14 @@
+---
+title: An Introduction To ISF
+tags: [Primer, Introduction]
+keywords: getting_started
+last_updated: June 12, 2018
+summary: "An overview of the topics covered in this Primer and an introduction to the concepts behind Interactive Shader Format."
+sidebar: home_sidebar
+permalink: primer_chapter_1.html
+folder: primer
+---
+
 # What is ISF?
 
 ISF, aka Interactive Shader Format, is a file format for creating video generators and FX plugins that can run on desktop, mobile and WebGL.  ISF is built on top of GLSL, a powerful cross-platform language that runs on the GPU.  By writing shaders that meet the ISF specification you can easily re-use your creations across different software applications without having to make environment specific modifications.

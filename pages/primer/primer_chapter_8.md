@@ -1,3 +1,14 @@
+---
+title: Audio Visualizers in ISF
+tags: [Primer, Audio, FFT]
+keywords: getting_started
+last_updated: June 12, 2018
+summary: "A closer look at making audio visualizers in ISF."
+sidebar: home_sidebar
+permalink: primer_chapter_8.html
+folder: primer
+---
+
 # Audio Visualizers in ISF
 
 Though GLSL as a language has no concept of sound data, many developers have found ways to writes audio-visualizers by converting audio into a format that can be passed to shaders.    As one of its extensions to the language, ISF includes a standard way for host software to pass in audio waveforms and FFT information for this purpose.

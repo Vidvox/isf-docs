@@ -4,7 +4,7 @@ tags: [Reference, Converting Shaders]
 keywords: texture2D(), texture2DRect(), IMG_NORM_PIXEL(), IMG_PIXEL(), GLSL, gl_FragCoord.xy, translate, convert
 last_updated: June 12, 2018
 summary: "Tips for converting GLSL shaders into the ISF specification."
-sidebar: reference_sidebar
+sidebar: home_sidebar
 permalink: ref_converting.html
 folder: ref
 ---

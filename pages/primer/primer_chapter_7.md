@@ -1,3 +1,14 @@
+---
+title: Multi-Pass and Persistant Buffers in ISF
+tags: [Primer, Introduction]
+keywords: getting_started
+last_updated: June 12, 2018
+summary: "A closer look at creating multi-pass shaders and using persistant buffers in ISF."
+sidebar: home_sidebar
+permalink: primer_chapter_7.html
+folder: primer
+---
+
 # Multi-Pass Shaders and Persistant Buffers in ISF
 
 Two extremely powerful concepts that ISF adds on to GLSL are the ability to retain image information between render passes (persistant buffers) and creating compound shaders that have multiple rendering stages (multi-pass shaders) at potentially varying sizes.

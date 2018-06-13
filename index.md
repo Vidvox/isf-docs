@@ -1,3 +1,12 @@
+---
+title: "Getting started with the Documentation Theme for Jekyll"
+keywords: home
+tags: [getting_started]
+sidebar: home_sidebar
+permalink: index.html
+summary: An overview of ISF, the topics covered in these documentation pages and related resources.
+---
+
 # What is ISF?
 
 ISF stands for "Interactive Shader Format", and is a file format that describes a GLSL fragment shader, as well as how to execute and interact with it. The goal of this file format is to provide a simple and minimal interface for image filters and generative video sources that allows them to be interacted with and reused in a generic and modular fashion. ISF is nothing more than a [slightly modified] GLSL fragment shader with a JSON blob at the beginning that describes how to interact with the shader (how many inputs/uniform variables it has, what their names are, what kind of inputs/variables they are, that sort of thing). ISF isn't some crazy new groundbreaking technology- it's just a simple and useful combination of two things that have been around for a while to make a minimal- but highly effective- filter format.
@@ -24,9 +33,9 @@ Whether you are a GLSL expert or just getting started, there are several resourc
 
 ### Online resources
 
-- The [ISF Quick Start](quickstart/) is a guide to quickly get started with writing GLSL shaders in the ISF specification.  A good starting point for people who already know how to code and are just looking to understand the core concepts of ISF.
-- The [ISF Reference Pages](ref/) contain an overview of the available built-in variables, functions and other conventions used by ISF as a quick reference for shader developers.
-- The [ISF Primer](primer/) is a set of in depth lessons with walkthroughs for writing your first GLSL shaders and discussion of advanced usages of the ISF specification.
+- The [ISF Quick Start](quickstart) is a guide to quickly get started with writing GLSL shaders in the ISF specification.  A good starting point for people who already know how to code and are just looking to understand the core concepts of ISF.
+- The [ISF Reference Pages](/ref.html) contain an overview of the available built-in variables, functions and other conventions used by ISF as a quick reference for shader developers.
+- The [ISF Primer](primer_index) is a set of in depth lessons with walkthroughs for writing your first GLSL shaders and discussion of advanced usages of the ISF specification.
 - The [ISF Specification Page](https://github.com/mrRay/ISF_Spec/) contains detailed information about ISF for shader and application developers, along with links to source code repositories and other useful resources.
 
 ### Software tools and sample files

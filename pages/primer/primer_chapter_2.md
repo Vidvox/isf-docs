@@ -1,3 +1,14 @@
+---
+title: The Anatomy of an ISF
+tags: [Primer, Introduction]
+keywords: getting_started
+last_updated: June 12, 2018
+summary: "A closer look at how to make an ISF composition."
+sidebar: home_sidebar
+permalink: primer_chapter_2.html
+folder: primer
+---
+
 # The anatomy of an ISF
 
 As we discussed in chapter 1, ISF is built on top of GLSL, and as such uses the same file types.  For the first few chapters we'll be dealing with Fragment Shaders that have a '.fs' as a  file extension.  In most cases for generating and processing video you'll only need a fragment shader, however in future chapters we'll also look at another type known as Vertex Shaders (.vs) and how they can be used.

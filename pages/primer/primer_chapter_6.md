@@ -1,3 +1,14 @@
+---
+title: Convolution Filters
+tags: [Primer, Introduction]
+keywords: getting_started
+last_updated: June 12, 2018
+summary: "A closer look at using convolution filters in ISF."
+sidebar: home_sidebar
+permalink: primer_chapter_6.html
+folder: primer
+---
+
 # Convolution Filter
 
 In image filtering one of the commonly used techniques from mathematics is are convolution matrices, also sometimes called a kernel.  Convolution is a process by which an element, in this case a pixel, is adjusted by performing some sort of function along with its neighboring pixels.  This is generally used for blurring, sharpening, embossing, edge detection, and other situations where multiple pixels are being blended together in some fashion.  This lesson on convolution will be relevant whether you are writing shaders to meet the ISF specification and for using GLSL other environments.

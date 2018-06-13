@@ -1,3 +1,14 @@
+---
+title: Adapting Existing GLSL Code to the ISF Specification
+tags: [Primer, Audio, FFT]
+keywords: getting_started
+last_updated: June 12, 2018
+summary: "Tips for adapting existing GLSL code to the ISF specification."
+sidebar: home_sidebar
+permalink: primer_chapter_9.html
+folder: primer
+---
+
 # Adapting Existing GLSL Code to the ISF Specification
 
 As we have discussed several times, ISF is itself built on top of GLSL.  Whether you are already familiar with the language or just getting started, you may at times find it useful to adapt code from elsewhere to meet the ISF specification so that you can use the shaders between different softwares.  Likewise you may at times also find it useful to convert your ISF codebase into other formats to that have their own environment specific requirements for shaders.

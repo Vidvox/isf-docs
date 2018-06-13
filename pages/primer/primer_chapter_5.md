@@ -1,3 +1,14 @@
+---
+title: Vertex Shaders
+tags: [Primer, Introduction]
+keywords: getting_started
+last_updated: June 12, 2018
+summary: "A closer look at using vertex shaders in ISF."
+sidebar: home_sidebar
+permalink: primer_chapter_5.html
+folder: primer
+---
+
 # Vertex Shaders
 
 When writing shaders that are designed for 2D images as the ISF specification is currently designed for, typically most of the code you'll write is in the fragment shader (.fs) of your ISF shader.  In all of the examples we've seen so far we haven't had to create a vertex shader at all - part of the ISF specification is to automatically generate one if there isn't one provided.

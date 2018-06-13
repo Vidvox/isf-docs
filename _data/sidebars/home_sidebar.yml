@@ -1,22 +1,93 @@
 # This is your sidebar TOC. The sidebar code loops through sections here and provides the appropriate formatting.
 
 entries:
-- title: Sidebar
-  levels: one
+- title: ISF Docs
+  product: ISF Documentation
+  version: 1.0
   folders:
 
-  - title: Sections
-    output: web
+  - title:
+    output: pdf
+    type: frontmatter
     folderitems:
-    - title: QuickStart
+    - title:
+      url: /titlepage.html
+      output: pdf
+      type: frontmatter
+    - title:
+      url: /tocpage.html
+      output: pdf
+      type: frontmatter
+
+  - title: Introduction
+    output: web, pdf
+    folderitems:
+    - title: About ISF
+      url: /index.html
+      output: web
+    - title: Quickstart
       url: /quickstart.html
       output: web
-    - title: Primer
+
+  - title: ISF Primer
+    output: web, pdf
+    folderitems:
+    - title: Primer TOC
       url: /primer_index.html
-      output: web
-    - title: Reference
+      output: web, pdf
+    - title: 1 - Introduction
+      url: /primer_chapter_1.html
+      output: web, pdf
+    - title: 2 - The Anatomy of an ISF
+      url: /primer_chapter_2.html
+      output: web, pdf
+    - title: 3 - Using and Creating ISF Compositions
+      url: /primer_chapter_3.html
+      output: web, pdf
+    - title: 4 - Data Types, Standard Variables and Functions
+      url: /primer_chapter_4.html
+      output: web, pdf
+    - title: 5 - Vertex Shaders
+      url: /primer_chapter_5.html
+      output: web, pdf
+    - title: 6 - Convolution Filters
+      url: /primer_chapter_6.html
+      output: web, pdf
+    - title: 7 - Multi-Pass and Persistant Buffers in ISF
+      url: /primer_chapter_7.html
+      output: web, pdf
+    - title: 8 - Audio Visualizers in ISF
+      url: /primer_chapter_8.html
+      output: web, pdf
+    - title: Chapter 9
+      url: 9 - Adapting Existing GLSL Code to the ISF Specification
+      output: web, pdf
+
+  - title: Reference
+    output: web, pdf
+    folderitems:
+    - title: Overview
       url: /ref_index.html
       output: web
-    - title: Spec
+    - title: Variables
+      url: /ref_variables.html
+      output: web
+    - title: Functions
+      url: /ref_functions.html
+      output: web
+    - title: Multi-Pass Shaders and Persistant Buffers
+      url: /ref_multipass.html
+      output: web
+    - title: JSON
+      url: /ref_json.html
+      output: web
+    - title: Converting
+      url: /ref_converting.html
+      output: web
+    - title: Changes
+      url: /ref_changes.html
+      output: web
+    - title: Full spec
       external_url: https://github.com/mrRay/ISF_Spec/
       output: web
+      
