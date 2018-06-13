@@ -1,5 +1,5 @@
 ---
-title: "Getting started with Interactive Shader Format (ISF)"
+title: "Getting started with Interactive Shader Format"
 keywords: home
 tags: [getting_started]
 sidebar: home_sidebar

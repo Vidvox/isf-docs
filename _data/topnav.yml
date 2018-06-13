@@ -3,10 +3,12 @@
 topnav:
 - title: Topnav
   items:
+    - title: About
+      url: /index.html
     - title: Quickstart
-      url: /quickstart
+      url: /quickstart.html
     - title: Primer
-      url: /primer_index
+      url: /primer_index.html
 
 #Topnav dropdowns
 topnav_dropdowns:
@@ -14,6 +16,8 @@ topnav_dropdowns:
   folders:
     - title: Reference
       folderitems:
+        - title: Overview
+          url: /ref_index.html
         - title: Automatically Created Variables, Uniforms and Constants
           url: /ref_variables.html
         - title: Built-In Functions

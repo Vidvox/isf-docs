@@ -9,7 +9,7 @@ permalink: ref_variables.html
 folder: ref
 ---
 
-# Automatically Generated Variables In GLSL and ISF
+# Automatically Generated Variables In ISF
 
 When writing shaders in the ISF Specification, the following variables are automatically created and available to use in your compositions.
 

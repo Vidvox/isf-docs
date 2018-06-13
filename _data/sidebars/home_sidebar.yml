@@ -24,7 +24,6 @@ entries:
     - title: About ISF
       url: /index.html
       output: web
-      output: web
     - title: Quickstart
       url: /quickstart.html
       output: web

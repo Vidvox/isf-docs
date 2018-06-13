@@ -11,8 +11,6 @@ folder: primer
 
 # The ISF Primer
 
-## Table of Contents
-
 This book is about the Interactive Shader Format, aka ISF, version 2.
 
 ### [Chapter 1](primer_chapter_1) - Introduction to ISF
