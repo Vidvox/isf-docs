@@ -2,8 +2,7 @@
 
 entries:
 - title: ISF Docs
-  product: ISF Documentation
-  version: 1.0
+  product: Sections
   folders:
 
   - title:
@@ -24,6 +23,7 @@ entries:
     folderitems:
     - title: About ISF
       url: /index.html
+      output: web
       output: web
     - title: Quickstart
       url: /quickstart.html
@@ -53,7 +53,7 @@ entries:
     - title: 6 - Convolution Filters
       url: /primer_chapter_6.html
       output: web, pdf
-    - title: 7 - Multi-Pass and Persistant Buffers in ISF
+    - title: 7 - Multi-Pass and Persistent Buffers in ISF
       url: /primer_chapter_7.html
       output: web, pdf
     - title: 8 - Audio Visualizers in ISF
@@ -75,7 +75,7 @@ entries:
     - title: Functions
       url: /ref_functions.html
       output: web
-    - title: Multi-Pass Shaders and Persistant Buffers
+    - title: Multi-Pass Shaders and Persistent Buffers
       url: /ref_multipass.html
       output: web
     - title: JSON

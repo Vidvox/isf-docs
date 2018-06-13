@@ -1,7 +1,7 @@
 ---
 title: Quickstart
 tags: [Quickstart, Introduction]
-keywords: getting_started, quickstart, multipass, animation, persistant buffers, audio, waveforms, FFT, converting
+keywords: getting_started, quickstart, multipass, animation, persistent buffers, audio, waveforms, FFT, converting
 last_updated: June 12, 2018
 summary: "A quick introduction to using and writing GLSL shaders in the ISF specification."
 sidebar: home_sidebar

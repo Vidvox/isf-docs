@@ -41,7 +41,7 @@ A few advanced examples involving vertex shaders.  We will also briefly explore 
 
 In this section we'll look at Convolution techniques in GLSL, which are used to make blur, sharpen and a number of other standard image filters.
 
-### [Chapter 7](primer_chapter_7) - Persistant Buffers and Multi-Pass Shaders
+### [Chapter 7](primer_chapter_7) - Persistent Buffers and Multi-Pass Shaders
 
 Two of the most powerful advanced features of ISF are the ability to create complex multi-stage shaders that can retain information between render passes.  Here we will look at some basic examples of how these concepts can be used to create feedback effects, deep blurs and the classic Conway's Game of Life.
 

@@ -1,17 +1,17 @@
 ---
-title: Multi-Pass and Persistant Buffers in ISF
+title: Multi-Pass and Persistent Buffers in ISF
 tags: [Primer, Introduction]
 keywords: getting_started
 last_updated: June 12, 2018
-summary: "A closer look at creating multi-pass shaders and using persistant buffers in ISF."
+summary: "A closer look at creating multi-pass shaders and using persistent buffers in ISF."
 sidebar: home_sidebar
 permalink: primer_chapter_7.html
 folder: primer
 ---
 
-# Multi-Pass Shaders and Persistant Buffers in ISF
+# Multi-Pass Shaders and Persistent Buffers in ISF
 
-Two extremely powerful concepts that ISF adds on to GLSL are the ability to retain image information between render passes (persistant buffers) and creating compound shaders that have multiple rendering stages (multi-pass shaders) at potentially varying sizes.
+Two extremely powerful concepts that ISF adds on to GLSL are the ability to retain image information between render passes (persistent buffers) and creating compound shaders that have multiple rendering stages (multi-pass shaders) at potentially varying sizes.
 
 In this chapter we'll look at:
 - How to set up a persistent buffer.
@@ -20,7 +20,7 @@ In this chapter we'll look at:
 - Discuss creating a deep blur using multiple render passes.
 - How to make a Conway's Game of Life generator using a persistent buffer.
 
-## Persistant Buffers
+## Persistent Buffers
 
 ISF files can define persistent buffers.  These buffers are images (GL textures) that stay with the ISF file for as long as it exists. This is useful if you want to "build up" an image over time- you can repeatedly query and update the contents of persistent buffers by rendering into them- or if you want to perform calculations across the entire image, storing the results somewhere for later evaluation. Further details on exactly how to do this are in the full [ISF Specification Page](https://github.com/mrRay/ISF_Spec/).
 
@@ -65,7 +65,7 @@ In this simple example we have added a new section to our JSON blob called `PASS
 - For each buffer that you wish to retain between passes, the `PERSISTENT` can be set to `true`.
 - If you wish to have the value stored as a 32-bit floating point value the additional `FLOAT` attribute can be included and set to `true`.  Using 32-bit textures will use up more memory, but in some cases can be extremely useful.
 
-For this ISF we have a single render pass, that is persistant and stores floating point values.
+For this ISF we have a single render pass, that is persistent and stores floating point values.
 
 In the code section we refer to the image `bufferVariableNameA`, which holds the output from the previous frame.
 
@@ -73,7 +73,7 @@ When the `PASSES` section is left out, as in our previous examples, it is presum
 
 ### Video Feedback
 
-One of the most common usages of persistant buffers is creating video feedback loops.  This is a process that goes back to the days of analog video and the same idea can be done digitally.  The above shader is an example of of this technique: By blending the previous pixel with the current frame, the visual effect of a feedback style motion blur is created.  Adding in additional functionality to this shader such as zooming, rotating, inverting, applying convolution kernels to blur / sharpen can create all kinds of interesting results.
+One of the most common usages of persistent buffers is creating video feedback loops.  This is a process that goes back to the days of analog video and the same idea can be done digitally.  The above shader is an example of of this technique: By blending the previous pixel with the current frame, the visual effect of a feedback style motion blur is created.  Adding in additional functionality to this shader such as zooming, rotating, inverting, applying convolution kernels to blur / sharpen can create all kinds of interesting results.
 
 Here is an example of how to modify the example to include an invert stage:
 
@@ -161,7 +161,7 @@ void main()
 }
 ```
 
-Like in our previous example, we had added the new `PASSES` section to the JSON blob.  This time there are two entries – the first is persistant and has a target name, the second contains no attributes.
+Like in our previous example, we had added the new `PASSES` section to the JSON blob.  This time there are two entries – the first is persistent and has a target name, the second contains no attributes.
 
 The first pass also has two new attributes: `WIDTH` and `HEIGHT` which can be used to resize the image before it is provided to the shader.  These attributes can be set to specific values, or you can enter in simple mathematically equations that allow them to vary depending on the actual width and height of the incoming image.  Declared uniform variables can also be used in these equations.  In this particular case the buffer will be resized to 1/16th its original width and height.
 
@@ -303,7 +303,7 @@ Looking at the JSON blob in the `PASSES` section, we can see that there are thre
 
 On each rendering pass the basic Box Blur kernel is applied and sent to the output.  When the `PASSINDEX` is 1 or 2 (on the 2nd and third render passes), the result of the Box Blur is combined with the result from the previous pass.  Instead of directly changing the kernel, the declared `INPUT` variables are used to adjust the amount of this blending.
 
-## Other uses of persistant buffers and multi-pass shaders
+## Other uses of persistent buffers and multi-pass shaders
 
 ### Conway's Game of Life
 

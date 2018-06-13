@@ -1,7 +1,7 @@
 ---
 title: ISF JSON Reference
 tags: [Reference, Introduction]
-keywords: variables, functions, multi-pass, persistant, JSON, converting, change
+keywords: variables, functions, multi-pass, persistent, JSON, converting, change
 last_updated: June 12, 2018
 summary: "An overview of reference materials for ISF."
 sidebar: home_sidebar
@@ -15,12 +15,12 @@ This reference contains a set of useful notes for writing GLSL shaders to meet t
 
 ## Reference Pages
 
-- [Automatically Created Variables, Uniforms and Constants](/ref_variables.html)
-- [Built-In Functions](/ref_functions.html)
-- [Multi-Pass Shaders and Persistant Buffers](/ref_multipass.html)
-- [ISF JSON Attributes](/ref_json.html)
-- [Converting Non-ISF GLSL shaders to ISF](/ref_converting.html)
-- [Change Log](/ref_changes.html)
+- [Automatically Created Variables, Uniforms and Constants](ref_variables)
+- [Built-In Functions](ref_functions)
+- [Multi-Pass Shaders and Persistent Buffers](ref_multipass)
+- [ISF JSON Attributes](ref_json)
+- [Converting Non-ISF GLSL shaders to ISF](ref_converting)
+- [Change Log](ref_changes)
     
 ## Sample Files
 

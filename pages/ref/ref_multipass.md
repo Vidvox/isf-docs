@@ -1,19 +1,19 @@
 ---
-title: ISF Multi-Pass and Persistant Buffer Reference
-tags: [Multi-pass, Persistant Buffers]
+title: ISF Multi-Pass and Persistent Buffer Reference
+tags: [Multi-pass, Persistent Buffers]
 keywords: PASSINDEX, PERSISTENT
 last_updated: June 12, 2018
-summary: "An overview of using multi-pass and persistant buffers in ISF."
+summary: "An overview of using multi-pass and persistent buffers in ISF."
 sidebar: home_sidebar
 permalink: ref_multipass.html
 folder: ref
 ---
 
-# ISF Multi-Pass and Persistant Buffer Reference
+# ISF Multi-Pass and Persistent Buffer Reference
 
-Two extremely powerful concepts that ISF adds on to GLSL are the ability to retain image information between render passes (persistant buffers) and creating compound shaders that have multiple rendering stages (multi-pass shaders) at potentially varying sizes.
+Two extremely powerful concepts that ISF adds on to GLSL are the ability to retain image information between render passes (persistent buffers) and creating compound shaders that have multiple rendering stages (multi-pass shaders) at potentially varying sizes.
 
-## Persistant Buffers
+## Persistent Buffers
 
 ISF files can define persistent buffers.  These buffers are images (GL textures) that stay with the ISF file for as long as it exists. This is useful if you want to "build up" an image over time- you can repeatedly query and update the contents of persistent buffers by rendering into them- or if you want to perform calculations across the entire image, storing the results somewhere for later evaluation. Further details on exactly how to do this are in the full [ISF Specification Page](https://github.com/mrRay/ISF_Spec/).
 

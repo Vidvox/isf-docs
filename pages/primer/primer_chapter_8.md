@@ -238,7 +238,7 @@ After that the color of the output pixel varies depending on the result from the
 
 #### An example Audio FFT Spectrogram visualizer
 
-As a final example in this chapter we will look at a shader that combines this new concept of audio FFTs with other powerful capabilities in ISF, the ability to store persistant buffers and perform multiple render passes.  This will enable us to not just look at the current FFT snapshot, we can store and display multiple FFTs over time.
+As a final example in this chapter we will look at a shader that combines this new concept of audio FFTs with other powerful capabilities in ISF, the ability to store persistent buffers and perform multiple render passes.  This will enable us to not just look at the current FFT snapshot, we can store and display multiple FFTs over time.
 
 If we take our FFT data slices and visualize them over time, we are essentially creating what is known as a [Spectrogram](https://en.wikipedia.org/wiki/Spectrogram) and you may have seen them before, as they are widely used in the arts, sciences and even show up from time to time in pop-culture.  Like FFTs themselves, they can represent all kinds of data and one very common use case is audio.
 
@@ -246,7 +246,7 @@ One particularly cool usage of this is from Aphex Twin in the song "Equation" wh
 
 [![[Equation] - Aphex Twin Spectrogram](http://img.youtube.com/vi/M9xMuPWAZW8/0.jpg)](https://www.youtube.com/watch?v=M9xMuPWAZW8&t=330s "Equation")
 
-Here is the code for making an audio FFT Spectrogram in ISF.  Note how we are making use of audioFFT inputs, multiple shader passes and persistant buffers.  Like with the previous FFT example there are added inputs for controlling the coloring of the output display.  There is also an option to reset the persistant buffer via the `clear` event.
+Here is the code for making an audio FFT Spectrogram in ISF.  Note how we are making use of audioFFT inputs, multiple shader passes and persistent buffers.  Like with the previous FFT example there are added inputs for controlling the coloring of the output display.  There is also an option to reset the persistent buffer via the `clear` event.
 
 ```
 /*{
@@ -410,6 +410,6 @@ void main()
 }
 ```
 
-The first pass of this shader is used to simply take the image data from the `fftImage` being provided and write it into the first column of the persistant `fftValues` buffer.  Pixels that already exist in the buffer are shifted further back in time.
+The first pass of this shader is used to simply take the image data from the `fftImage` being provided and write it into the first column of the persistent `fftValues` buffer.  Pixels that already exist in the buffer are shifted further back in time.
 
 On the second render pass the raw spectrogram values from `fftValues` are read and styled using the provided uniform variables.  For the most part this section branches based on whether the `lumaMode` style is active.  In one code branch the colors vary over the frequency, in the other code branch the colors vary depending on the amplitude.

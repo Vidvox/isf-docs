@@ -18,7 +18,7 @@ entries:
     - title: Functions
       url: /ref_functions.html
       output: web
-    - title: Multi-Pass Shaders and Persistant Buffers
+    - title: Multi-Pass Shaders and Persistent Buffers
       url: /ref_multipass.html
       output: web
     - title: JSON

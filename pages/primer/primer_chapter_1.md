@@ -53,7 +53,7 @@ Some of the specific ways that ISF extends GLSL is by providing:
 - An interface for shaders to describe their parameters to host applications.  This is done by providing a commented out JSON-blob in the space above the GLSL source code.
 - A set of standard uniform variables, such as TIME, FRAMEINDEX, RENDERSIZE and isf_FragNormCoord.
 - A convention for working with multiple passes for creating compound shader chains within a single file.
-- The ability to create persistant buffers that can be used to store data in between render passes.
+- The ability to create persistent buffers that can be used to store data in between render passes.
 - The ability to resize texture inputs to specific sizes before rendering.
 - A standard input convention for working with raw multichannel audio and audio FFT data.
 - A set of standard functions for accessing texture size and color information that work with 2D or Rect textures.
