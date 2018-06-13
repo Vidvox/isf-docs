@@ -1,5 +1,5 @@
 ---
-title: "Getting started with the Documentation Theme for Jekyll"
+title: "Getting started with Interactive Shader Format (ISF)"
 keywords: home
 tags: [getting_started]
 sidebar: home_sidebar
@@ -34,7 +34,7 @@ Whether you are a GLSL expert or just getting started, there are several resourc
 ### Online resources
 
 - The [ISF Quick Start](quickstart) is a guide to quickly get started with writing GLSL shaders in the ISF specification.  A good starting point for people who already know how to code and are just looking to understand the core concepts of ISF.
-- The [ISF Reference Pages](/ref.html) contain an overview of the available built-in variables, functions and other conventions used by ISF as a quick reference for shader developers.
+- The [ISF Reference Pages](ref) contain an overview of the available built-in variables, functions and other conventions used by ISF as a quick reference for shader developers.
 - The [ISF Primer](primer_index) is a set of in depth lessons with walkthroughs for writing your first GLSL shaders and discussion of advanced usages of the ISF specification.
 - The [ISF Specification Page](https://github.com/mrRay/ISF_Spec/) contains detailed information about ISF for shader and application developers, along with links to source code repositories and other useful resources.
 

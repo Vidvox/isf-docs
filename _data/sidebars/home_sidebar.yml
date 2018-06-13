@@ -59,8 +59,8 @@ entries:
     - title: 8 - Audio Visualizers in ISF
       url: /primer_chapter_8.html
       output: web, pdf
-    - title: Chapter 9
-      url: 9 - Adapting Existing GLSL Code to the ISF Specification
+    - title: 9 - Adapting Existing GLSL Code to the ISF Specification
+      url: /primer_chapter_9.html
       output: web, pdf
 
   - title: Reference
