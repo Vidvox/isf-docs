@@ -42,7 +42,7 @@ ISF files can be created, viewed and shared online at the [isf.video](http://int
 ### The ISF Editor for Mac
 
 A free ISF Editor for Mac is available here: 
-[ISF Editor.app.zip](http://www.vidvox.net/rays_oddsnends/ISF_Editor_2.9.7.zip).
+[ISF Editor.app.zip](https://www.vidvox.net/download/ISF_Editor_2.9.7.3.dmg).
 
 These are some of its basic features:
 - Browses, renders and displays ISF files. Has a built-in video source, and can also use any QC comps, movie files, image files, Syphon video servers, or AVCapture-compatible video inputs as a video source for testing ISF-based image filters.
