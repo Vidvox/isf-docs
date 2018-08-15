@@ -21,6 +21,8 @@ In this document we will cover the basics of using and writing shaders in ISF.
 
 ## Using ISF Compositions
 
+{% include image.html file="quickstart/ISF-In-VDMX.png" alt="ISF generator in VDMX" max-width="685" caption="ISF composition being used as a source file in VDMX." %}
+
 - Shaders written in the ISF specification can be used in supported environments on desktop, mobile and the web.  To use ISF files in a specific piece of software consult the appropriate documentation.
 - ISF files that you would like to be globally available to all software on your Mac can be placed in the "/Library/Graphics/ISF" or "~/Library/Graphics/ISF" directories.  Generators, filters and transitions in these directories should generally be automatically available within supported software where applicable. 
 - ISF files can be created, viewed and shared online at the [interactiveshaderformat.com](http://interactiveshaderformat.com) website.  Compositions from this site can be downloaded and used in your host software of choice.
@@ -42,7 +44,7 @@ In this case the ".fs" file extension stands for "fragment shader" which is the 
 
 Copy and paste the following code into the text editor area and then save the document.  If you are working one of the live updating apps, your output should render a solid orange color.  If you are working in a text editor, you should be able to load the "myshader.fs" into the host application of your choice as a generator file.
 
-```
+```glsl
 /*{
 	"DESCRIPTION": "Every pixel is orange",
 	"CREDIT": "by VIDVOX",
@@ -64,6 +66,8 @@ This ISF composition is made up of two parts - a JSON blob at the top that descr
 
 From this starting point, you can replace the contents of the `void main() {}` function with other code and set `gl_FragColor` to any other color.  With GLSL, the code in this function will execute simultaneously for every single pixel in your image.
 
+{% include image.html file="quickstart/All-Orange.png" alt="Orange generator in ISF Editor" max-width="720" caption="Every pixel is orange example in the ISF Editor." %}
+
 This is further detailed in the [ISF Primer chapter on the anatomy of an ISF composition](primer_chapter_2).
 
 ## Automatically Created Uniforms and Variables in ISF
@@ -77,7 +81,7 @@ A few of the most important automatic uniforms in ISF are:
 
 Try creating a new shader called "cartesian coordinates.fs" and pasting in the following code:
 
-```
+```glsl
 /*{
 	"DESCRIPTION": "Show coordinate space",
 	"CREDIT": "by VIDVOX",
@@ -100,7 +104,7 @@ In the ISF References Pages you can find a list of [automatic uniforms in ISF](r
 
 Next create another shader called "time animation.fs" and paste in the following code:
 
-```
+```glsl
 /*{
 	"DESCRIPTION": "Test animation",
 	"CREDIT": "by VIDVOX",
@@ -118,6 +122,8 @@ void main() {
 
 This code uses the `TIME` uniform variable to animate the output.  When the x position of the current coordinate is less than the fraction part of the time in sections the image is filled in with our color, otherwise the pixel is transparent.
 
+{% include image.html file="quickstart/Timed-Animation.gif" alt="Timed animation example" max-width="480" caption="Timed animation loop in ISF Editor preview." %}
+
 Further discussion and examples can be found in the [ISF Primer chapter on automatically created uniform variables](primer_chapter_4).
 
 ## Adding Interface Controls
@@ -128,7 +134,7 @@ Going back to our first example, we could add a single uniform variable to this 
 
 You can either create a new shader for this, or modify the "myshader.fs" that you've already started.
 
-```
+```glsl
 /*{
 	"DESCRIPTION": "Demonstrates a float input",
 	"CREDIT": "by VIDVOX",
@@ -153,13 +159,15 @@ void main() {
 }
 ```
 
+{% include image.html file="quickstart/ISF-Editor-Add-Inputs.png" alt="Adding inputs in the ISF Editor" max-width="720" caption="Adding inputs in the ISF Editor." %}
+
 Looking in the `INPUTS` section, there is a single element with several attributes.  The two that are required here are `NAME` and `TYPE` which are set to "level" and "float" respectively.
 
 Additional the optional `LABEL`, `MIN`, `MAX` and `LABEL` attributes are included here.
 
 Now instead of the "float" option for `TYPE`, try this code which uses the "color" option which provides a vec4 uniform variable.
 
-```
+```glsl
 /*{
 	"DESCRIPTION": "Demonstrates a color input",
 	"CREDIT": "by VIDVOX",
@@ -200,7 +208,7 @@ As an important note, if you are on a Mac, be sure to save this file to the "~/L
 
 Now copy and paste the following code into your editor and save the file:
 
-```
+```glsl
 /*{
 	"DESCRIPTION": "demonstrates an invert image filter",
 	"CREDIT": "by VIDVOX",
@@ -233,6 +241,8 @@ This very simple example demonstrates the two important details when creating im
 - Including the "inputImage" as an element in the `INPUTS` section of the JSON blob.
 - Using the `IMG_NORM_PIXEL()` function to get the color of a particular normalized pixel.  Within ISF, this function and its non-normalized counterpart `IMG_PIXEL()` replace the functions `texture2D()` or `texture2DRect()`.  More information can be found on the [ISF built-in functions](ref_functions) reference page.
 
+{% include image.html file="quickstart/ISF-Image-Inputs.png" alt="Creating ISF FX" max-width="720" caption="Adding an image input in the ISF Editor to create an FX." %}
+
 ISF compositions can include more than one image input, making it possible to pass in additional data to be used for things like masking and distortion effects.  Additional information on declaring image inputs and the image filter convention can be found in the[ISF JSON Reference](ref_json).
 
 ## Including Vertex Shaders
@@ -247,7 +257,7 @@ If you are using the ISF Editor for Mac or the web, instead of creating a new te
 
 For the vertex shader, copy and paste the following code:
 
-```
+```glsl
 //	passthru.vs
 //	put your code in the main() {} function
 
@@ -263,7 +273,7 @@ void main()
 
 And it match up with a corresponding boring passthru.fs that looks like this:
 
-```
+```glsl
 //	passthru.fs
 /*{
 	"DESCRIPTION": "Passes through each pixel",
@@ -288,6 +298,8 @@ void main() {
 }
 ```
 
+{% include image.html file="quickstart/Vertex-Shader-Editing.png" alt="Editing Vertex Shader in ISF Editor" max-width="720" caption="Editing Vertex Shader in the ISF Editor." %}
+
 The two important details here are:
 - When including your own vertex shader, make sure to include the `isf_vertShaderInit();` that tells the host application to do any initial setup.
 - In this pair of shaders, the `varying` variable is used to pass data from the vs to the fs and it is declared in both documents.
@@ -306,7 +318,7 @@ Like with other properties we have seen so far, setting up multiple render passe
 
 From the set of ISF Tests + Tutorial shaders is the "Test-MultiPassRendering.fs" example of using multiple render passes:
 
-```
+```glsl
 /*{
 	"DESCRIPTION": "demonstrates the use of two-pass rendering- the first pass renders to a persistent buffer which is substantially smaller than the res of the image being drawn.  the second pass renders at the default requested size and scales up the image from the first pass",
 	"CREDIT": "by zoidberg",
@@ -364,7 +376,7 @@ Persistent buffers are an optional attribute that can be attached to any element
 
 From the set of ISF Tests + Tutorial shaders is the "Test-PersistentBuffer.fs" example of using persistent buffers:
 
-```
+```glsl
 /*{
 	"DESCRIPTION": "demonstrates the use of a persistent buffer to create a motion-blur type effect. also demonstrates the simplest use of steps: a one-step rendering pass",
 	"CREDIT": "by zoidberg",
@@ -414,7 +426,7 @@ Like with image data, audio inputs are declared in the `INPUTS` section of the J
 
 From the "ISF tests+tutorials" is this simple audio visualizer shader.  In addition to the declared `waveImage` audio input is an options for setting the wave size and output display style called `waveSize`.
 
-```
+```glsl
 /*
 {
   "CATEGORIES" : [
@@ -458,6 +470,8 @@ void main() {
 To pass audio data into shaders, the audio samples are converted into pixel information and packed into an image.  This image is then passed into the shader like any other.  The `IMG_SIZE()` function can be used to get the dimensions.  The the y-axis representing individual channels and x-axis contains the raw audio samples for each channel.  From here, the `IMG_NORM_PIXEL()` or `IMG_PIXEL()` functions can be used to read the sample data.
 
 The "audioFFT" type works in a similar fashion, with the results packed into an image where the y-axis representing individual channels and the x-axis holding the results for individual frequency bins.
+
+{% include image.html file="quickstart/Audio-Inputs.png" alt="Audio Reactive Shader in ISF Editor" max-width="720" caption="Shader with raw audio and FFT waveform inputs in the ISF Editor." %}
 
 Further discussion and examples can be found in the [ISF Primer chapter on working with audio and audio FFTs](primer_chapter_8).
 
