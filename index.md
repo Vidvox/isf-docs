@@ -80,5 +80,5 @@ Additionally here are a few other useful open source projects that use ISF to ch
 - [ISF-JS-Renderer](https://www.github.com/msfeldstein/ISF-JS-Renderer) can be used to parse and render ISF files through javascript.
 - [libisf](https://github.com/jcelerier/libisf) is a library for parsing ISF files and includes an example editor made with Qt.
 - [ISF TouchDesigner](https://github.com/marcinbiegun/isf-touchdesigner) has partial support for using ISF files in TouchDesigner projects.
-- [ofxISF](github.com/satoruhiga/ofxISF) has partial support for using ISF files in OpenFrameworks projects.
+- [ofxISF](https://github.com/satoruhiga/ofxISF) has partial support for using ISF files in OpenFrameworks projects.
 - [ISFHeavyM](https://github.com/sophiadigitalart/ISFHeavyM) and [ISFgif](https://github.com/sophiadigitalart/ISFGif) can be used to create a ISF shared library with GIF preview for HeavyM.
