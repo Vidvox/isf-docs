@@ -62,9 +62,9 @@ ISF compositions can be used in a variety of different host applications.  In th
 
 On the Mac, compositions that are located in the "/Library/Graphics/ISF/" and "~/Library/Graphics/ISF/" directories are considered to be global and are commonly automatically accessed by any software that supports the specification.
 
-### [VDMX](http://vidvox.net)
+### VDMX
 
-The ISF specification was originally designed for use in VDMX and is a fitting first example.
+The ISF specification was originally designed for use in [VDMX](http://vidvox.net) and is a fitting first example.
 
 ISF compositions installed in the global directories are automatically detected and included as available assets in the appropriate place:
 - ISF Generators can be found in the Layer Source menu, or added to media bin pages where they can be triggered to layers like any other source.  When using ISF Generators, the rendering resolution can be specified from the Layer Source inspector.
@@ -91,4 +91,15 @@ Here are links to websites of a few different other softwares that support the I
 
 The [interactive-shader-format-js](https://github.com/msfeldstein/interactive-shader-format-js) project includes code for loading and rendering ISF compositions as part of a WebGL pipeline.  An example implementation of using the javascript implementation of ISF can be found in the [ISF Generator Example on Glitch.com](https://glitch.com/edit/#!/isf-example?path=README.md).
 
+### Related open source projects
 
+Developers interested in working with ISF files on a code level can take advantage of several existing libraries, frameworks and example projects.
+
+The VIDVOX ISF Editor and VVISFKit framework codebases are open source and can be found in the [VVOpenSource](https://github.com/mrRay/vvopensource) repository.
+
+Additionally here are a few other useful open source projects that use ISF to check out:
+- [ISF-JS-Renderer](https://www.github.com/msfeldstein/ISF-JS-Renderer) can be used to parse and render ISF files through javascript.
+- [libisf](https://github.com/jcelerier/libisf) is a library for parsing ISF files and includes an example editor made with Qt.
+- [ISF TouchDesigner](https://github.com/marcinbiegun/isf-touchdesigner) has partial support for using ISF files in TouchDesigner projects.
+- [ofxISF](github.com/satoruhiga/ofxISF) has partial support for using ISF files in OpenFrameworks projects.
+- [ISFHeavyM](https://github.com/sophiadigitalart/ISFHeavyM) and [ISFgif](https://github.com/sophiadigitalart/ISFGif) can be used to create a ISF shared library with GIF preview for HeavyM.

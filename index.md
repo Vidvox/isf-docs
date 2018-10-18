@@ -18,8 +18,7 @@ Shaders written in the ISF specification can be used in supported environments o
 - In many cases, ISF generator files can be directly loaded into the media bin / media player section of host software.
 - ISF files that you would like to be globally available to all software on your Mac can be placed in the "/Library/Graphics/ISF" or "~/Library/Graphics/ISF" directories.  Generators, filters and transitions in these directories should generally be automatically available within supported software where applicable.
 
-
-### Supported software
+### Supported playback software
 
 The ISF specification was original created for [VDMX](http://vidvox.net) and is now supported by several different applications as a format including:
 - [CoGe](https://imimot.com/cogevj/)
@@ -72,3 +71,14 @@ Though you can create or modify ISF compositions using any standard text editor 
 ## Adding Support For ISF in 3rd Party Software
 
 The [ISF Specification Page](https://github.com/mrRay/ISF_Spec/) contains detailed information about ISF application developers, along with links to source code repositories and other useful resources to get started with.
+
+### Related open source codebases
+
+The VIDVOX ISF Editor and VVISFKit framework codebases are open source and can be found in the [VVOpenSource](https://github.com/mrRay/vvopensource) repository.
+
+Additionally here are a few other useful open source projects that use ISF to check out:
+- [ISF-JS-Renderer](https://www.github.com/msfeldstein/ISF-JS-Renderer) can be used to parse and render ISF files through javascript.
+- [libisf](https://github.com/jcelerier/libisf) is a library for parsing ISF files and includes an example editor made with Qt.
+- [ISF TouchDesigner](https://github.com/marcinbiegun/isf-touchdesigner) has partial support for using ISF files in TouchDesigner projects.
+- [ofxISF](github.com/satoruhiga/ofxISF) has partial support for using ISF files in OpenFrameworks projects.
+- [ISFHeavyM](https://github.com/sophiadigitalart/ISFHeavyM) and [ISFgif](https://github.com/sophiadigitalart/ISFGif) can be used to create a ISF shared library with GIF preview for HeavyM.

@@ -69,7 +69,7 @@ Recalling our discussion from chapter 1, GLSL is also commonly known as the "Ope
 
 With fragment shaders each pixel for the output is preloaded with the same same `main() {}` function and its behavior can vary depending on its coordinate position and other input variables that are specific to the individual pixel.
 
-{% include image.html file="primer_2_pixels.jpg" alt="Rendering a 8x8 pixel grid" caption="Fragment Shaders render the same main() {} function for each pixel" %}
+{% include image.html file="/primer/2/primer_2_pixels.jpg" alt="Rendering a 8x8 pixel grid" caption="Fragment Shaders render the same main() {} function for each pixel" %}
 
 
 This is often a different way of thinking about graphical programming or visual design than many people are accustomed to, but makes sense when you consider the parallel processing power of the GPU.  Rather than write a complex program that needs to step through each coordinate, these smaller micro-programs can be executed on each individual pixel at the same time.
