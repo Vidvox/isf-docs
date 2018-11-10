@@ -88,6 +88,5 @@ Additionally here are a few other useful open source projects that use ISF to ch
 
 This is a test
 
-{% youtube oHg5SJYRHA0 500 400 %}
-
-{% isf isf.html 5bd1092d90e22210c3c391b7 500 400 %}
+<div class="youtube" id="29MAL8pJImQ"></div>
+<div class="isf" id="5bd1092d90e22210c3c391b7"></div>
