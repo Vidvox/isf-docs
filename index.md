@@ -82,3 +82,10 @@ Additionally here are a few other useful open source projects that use ISF to ch
 - [ISF TouchDesigner](https://github.com/marcinbiegun/isf-touchdesigner) has partial support for using ISF files in TouchDesigner projects.
 - [ofxISF](https://github.com/satoruhiga/ofxISF) has partial support for using ISF files in OpenFrameworks projects.
 - [ISFHeavyM](https://github.com/sophiadigitalart/ISFHeavyM) and [ISFgif](https://github.com/sophiadigitalart/ISFGif) can be used to create a ISF shared library with GIF preview for HeavyM.
+
+
+#### ISF Embeds
+
+This is a test:
+
+<iframe src="https://isf.video/sketches/5bd1092d90e22210c3c391b7/embed" width=600 height=600 style="border: 0"></iframe>
